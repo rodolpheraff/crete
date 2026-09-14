@@ -55,6 +55,8 @@ a{color:var(--sea)}
 .hero .from{font:italic 400 17px var(--disp);opacity:.9}
 .hero .sun{position:absolute;right:26px;top:74px;width:54px;height:54px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#F3C46A,#E1A032 70%);box-shadow:0 0 40px 8px rgba(225,160,50,.35);opacity:.9}
 .hero svg{position:absolute;left:0;bottom:-1px;width:100%;height:46px}
+.hotel{margin-top:10px;font-weight:600;font-size:14px}
+.me{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:#fff;background:var(--sun);border-radius:6px;padding:1px 6px;white-space:nowrap}
 .countdown{display:inline-block;margin-top:12px;background:rgba(246,239,227,.14);border:1px solid rgba(246,239,227,.25);border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600}
 
 .wrap{max-width:720px;margin:0 auto;padding:0 14px}
@@ -172,6 +174,8 @@ var TAGS = {
   village: { l: "Village", c: "#B07A1F" },
   vue:     { l: "Vue",     c: "#8A5A83" },
   bateau:  { l: "Bateau",  c: "#2F8AA3" },
+  resto:   { l: "Resto",   c: "#9C3D54" },
+  courses: { l: "Courses", c: "#5B6B73" },
   depart:  { l: "Départ",  c: "#0E3A52" }
 };
 
@@ -190,48 +194,60 @@ var P = {
 
 var TRIP = [
 {
-  date: "2026-09-16", night: "Réthymnon", from: "l'aéroport", c: P.rethymno, sea: [35.39, 24.47],
-  car: { o: P.her, d: P.rethymno, via: [], oL: "Aéroport", dL: "Réthymnon" },
+  date: "2026-09-16", night: "Réthymnon", from: "l'aéroport", c: [35.3696, 24.4746], sea: [35.39, 24.47],
+  hotel: { n: "Othonas Concept Suites", c: [35.3696, 24.4746] },
+  car: { o: P.her, d: [35.3696, 24.4746], via: [], oL: "Aéroport", dL: "Réthymnon" },
   drive: "≈ 80 km · 1h10",
-  route: "Depuis Héraklion : route nationale nord (VOAK), simple et rapide. Depuis La Canée c'est pareil, ≈ 75 km · 1h10.",
+  route: "Depuis Héraklion : route nationale nord (VOAK), simple et rapide.",
   en: [
-    { n: "Monastère d'Arkadi", t: "site", o: 1, c: [35.3095, 24.6290], x: "1h", d: "Symbole de la résistance crétoise (1866). Petit détour de 25 min depuis la VOAK si vous arrivez par Héraklion et qu'il reste du temps." }
+    { n: "Monastère d'Arkadi", t: "site", o: 1, c: [35.3095, 24.6290], x: "1h", d: "Symbole de la résistance crétoise (1866). Petit détour de 25 min depuis la VOAK s'il reste du temps." }
   ],
   sur: [
-    { n: "Vieille ville vénitienne", t: "village", c: [35.3688, 24.4745], d: "Ruelles à arcades, fontaine Rimondi, mosquée Neratze et son minaret. Tout se fait à pied." },
+    { n: "Vieille ville vénitienne", t: "village", c: [35.3688, 24.4745], d: "Ruelles à arcades, fontaine Rimondi, mosquée Neratze et son minaret. Tout se fait à pied depuis l'hôtel." },
     { n: "Port vénitien & phare", t: "vue", c: [35.3702, 24.4790], d: "Tavernas sur le quai (un peu touristiques), balade jusqu'au phare au coucher du soleil." },
     { n: "Fortezza", t: "site", c: [35.3730, 24.4720], d: "Forteresse du XVIe au-dessus de la ville, vue sur les toits et la mer. Fermeture en fin d'après-midi : à vérifier sur place." },
     { n: "Plage de la ville", t: "plage", c: [35.3655, 24.4840], d: "Longue plage de sable juste à l'est du port, pratique pour une première baignade." }
   ],
   eat: "Kalitsounia (chaussons au fromage frais) et raki offert en fin de repas : c'est la tradition.",
-  tip: "Retirer du liquide dès ce soir (villages du sud-ouest sans distributeur) et acheter une glacière souple + chaussures d'eau."
+  tip: "Retirer du liquide dès ce soir (Agia Roumeli et Lykos sans distributeur fiable) et prévoir glacière souple + chaussures d'eau."
 },
 {
-  date: "2026-09-17", night: "Elafonissi", from: "Réthymnon", c: P.elafonisi, sea: [35.25, 23.53],
-  car: { o: P.rethymno, d: P.elafonisi, via: [P.chania, P.topolia, P.elos], oL: "Réthymnon", dL: "Elafonissi" },
-  drive: "≈ 150 km · 2h50 sans les arrêts",
-  route: "VOAK jusqu'à La Canée, direction Kissamos, sortie Kaloudiana puis descente plein sud par les gorges de Topolia. Après Topolia : route de montagne étroite et sinueuse, klaxon dans les virages sans visibilité.",
+  date: "2026-09-17", night: "Elafonissi", from: "Réthymnon", c: [35.3615, 23.6120], sea: [35.25, 23.53],
+  hotel: { n: "Fairytale, Perivolia", c: [35.3615, 23.6120] },
+  car: { o: [35.3696, 24.4746], d: [35.3615, 23.6120], via: [[35.4920, 23.5807], [35.3152, 23.5335], [35.2712, 23.5413]], oL: "Réthymnon", dL: "Fairytale" },
+  gm: [
+    { l: "Avec Falasarna · 3h50", u: "https://www.google.com/maps/dir/Othonas+Concept+Suites,+Mavrokordatou+Alexanrou+25,+Rethymno+741+31,+Gr%C3%A8ce/Falasarna+beach,+734+00,+Gr%C3%A8ce/Voulolimni,+Chrissoskalitissa,,+730+12,+Gr%C3%A8ce/Plage+D'%C3%89lafonissi,+Kissamos+730+01,+Gr%C3%A8ce/Fairytale,+Epar.Od.+Kaloudianon-Chrisoskalitissas+1,+Perivolia+730+12,+Gr%C3%A8ce/@35.4034663,23.6745695,98454m/data=!3m1!1e3!4m32!4m31!1m5!1m1!1s0x149b75379f744171:0x9af2ac0fa64f7b70!2m2!1d24.4745535!2d35.3695662!1m5!1m1!1s0x149cf0aedf9c964f:0x96c1687d57cade49!2m2!1d23.5806621!2d35.4919665!1m5!1m1!1s0x149ce65a5ca0fcdd:0x4d7ad08d85cc7468!2m2!1d23.5334953!2d35.3152297!1m5!1m1!1s0x149ce7918e567bbf:0x28683e9262f05f1b!2m2!1d23.5412959!2d35.2711801!1m5!1m1!1s0x149ceefe214f3f2d:0x66ae4994d85a6066!2m2!1d23.6120233!2d35.361541!3e0" },
+    { l: "Direct · 3h", u: "https://www.google.com/maps/dir/Othonas+Concept+Suites,+Mavrokordatou+Alexanrou+25,+Rethymno+741+31,+Gr%C3%A8ce/Voulolimni,+Chrissoskalitissa,,+730+12,+Gr%C3%A8ce/Plage+D'%C3%89lafonissi,+Kissamos+730+01,+Gr%C3%A8ce/Fairytale,+Epar.Od.+Kaloudianon-Chrisoskalitissas+1,+Perivolia+730+12,+Gr%C3%A8ce/@35.4034663,23.6745695,98454m/data=!3m1!1e3!4m26!4m25!1m5!1m1!1s0x149b75379f744171:0x9af2ac0fa64f7b70!2m2!1d24.4745535!2d35.3695662!1m5!1m1!1s0x149ce65a5ca0fcdd:0x4d7ad08d85cc7468!2m2!1d23.5334953!2d35.3152297!1m5!1m1!1s0x149ce7918e567bbf:0x28683e9262f05f1b!2m2!1d23.5412959!2d35.2711801!1m5!1m1!1s0x149ceefe214f3f2d:0x66ae4994d85a6066!2m2!1d23.6120233!2d35.361541!3e0" }
+  ],
+  drive: "3h en direct · 3h50 en passant par Falasarna",
+  route: "VOAK jusqu'à La Canée puis Kissamos. Avec Falasarna : route de la côte ouest vers le sud. En direct : descente par Topolia et Elos. Routes étroites et sinueuses après Kissamos, klaxon dans les virages sans visibilité.",
   en: [
-    { n: "La Canée (Chania), port vénitien", t: "village", c: P.chania, x: "1h30", d: "Pile sur la route, à 1h de Réthymnon. Café sur le port, phare, quartier Splantzia. Bougatsa chaude au petit-déj : la spécialité de la ville." },
-    { n: "Gorges de Topolia & grotte Agia Sofia", t: "vue", c: P.topolia, x: "30 min", d: "La route passe dans la gorge. Petit escalier vers une grotte-chapelle avec vue plongeante." },
-    { n: "Elos", t: "village", c: P.elos, d: "Village des châtaigniers, platanes et fontaines. Bonne pause déjeuner à l'ombre." },
-    { n: "Monastère Chrysoskalitissa", t: "site", c: P.chryso, d: "Monastère blanc perché sur un rocher face à la mer, 10 min avant Elafonissi." }
+    { n: "Courses au Lidl", t: "courses", me: 1, u: "https://maps.app.goo.gl/m6LDfTtyAAwUGf6u9", d: "Lidl d'Atsipopoulo, à la sortie de Réthymnon : eau, pique-nique, de quoi tenir à Elafonissi." },
+    { n: "La Canée (Chania), port vénitien", t: "village", o: 1, c: P.chania, x: "1h30", d: "Sur la route, à 1h de Réthymnon. Café sur le port, phare, bougatsa chaude : la spécialité de la ville." },
+    { n: "Plage de Falasarna", t: "plage", me: 1, c: [35.4920, 23.5807], x: "trajet 1", d: "Grande plage de sable de la côte ouest, eau turquoise, parmi les plus beaux couchers de soleil de Crète." },
+    { n: "Gorges de Topolia & grotte Agia Sofia", t: "vue", o: 1, c: P.topolia, x: "trajet direct", d: "La route passe dans la gorge. Petit escalier vers une grotte-chapelle avec vue plongeante." },
+    { n: "Monastère Chrysoskalitissa", t: "site", c: P.chryso, d: "Monastère blanc perché sur un rocher face à la mer, juste avant Voulolimni." },
+    { n: "Voulolimni", t: "plage", me: 1, c: [35.3152, 23.5335], d: "Crique près de Chrysoskalitissa, plus calme qu'Elafonissi." }
   ],
   sur: [
-    { n: "Plage d'Elafonissi", t: "plage", c: P.elafonisi, d: "Lagune turquoise, sable rosé, eau peu profonde. Idéal en fin d'après-midi quand les cars repartent, et au lever du jour. Réserve Natura 2000 : ne rien ramasser." },
-    { n: "Traversée vers l'îlot", t: "plage", c: [35.2685, 23.5355], d: "On traverse la lagune à pied, de l'eau jusqu'aux genoux : dunes, criques plus calmes et vue sur le coucher du soleil." },
-    { n: "Kedrodasos", t: "rando", o: 1, c: [35.2800, 23.5600], x: "45 min", d: "Plage sauvage bordée de genévriers, par le sentier E4 depuis Elafonissi. Aucun ombre sur le chemin." }
+    { n: "Plage d'Elafonissi", t: "plage", me: 1, c: [35.2712, 23.5413], d: "Lagune turquoise, sable rosé, eau peu profonde. Idéal en fin d'après-midi quand les cars repartent. Réserve Natura 2000 : ne rien ramasser." },
+    { n: "Traversée vers l'îlot", t: "plage", c: [35.2685, 23.5355], d: "On traverse la lagune à pied, de l'eau jusqu'aux genoux : dunes, criques plus calmes et coucher de soleil." },
+    { n: "Kedrodasos", t: "rando", o: 1, c: [35.2800, 23.5600], x: "45 min", d: "Plage sauvage bordée de genévriers, par le sentier E4 depuis Elafonissi. Aucune ombre sur le chemin." },
+    { n: "Elos", t: "village", o: 1, c: P.elos, d: "Village des châtaigniers à quelques minutes de l'hôtel, platanes et fontaines." }
   ],
-  eat: "Peu de choix autour de la plage : tavernas vers Chrysoskalitissa. Prévoir pique-nique et beaucoup d'eau.",
-  tip: "Parking payant à la plage. Faire le plein à Kissamos / Kaloudiana. Demain réveil tôt : départ 7h pour le ferry de 8h30 à Palaiochora."
+  eat: "Peu de choix près de la plage : pique-nique du Lidl, ou tavernas autour de Perivolia et Elos le soir.",
+  tip: "Parking payant à la plage. Faire le plein à Kissamos. Demain réveil tôt : 45 min jusqu'au port de Palaiochora pour le ferry de 8h30."
 },
 {
   date: "2026-09-18", night: "Agia Roumeli", from: "Elafonissi", c: P.roumeli, sea: [35.21, 23.96],
-  car: { o: P.elafonisi, d: P.paleochora, via: [], oL: "Elafonissi", dL: "Port de Palaiochora" },
+  car: { o: [35.3615, 23.6120], d: P.paleochora, via: [], oL: "Fairytale", dL: "Port de Palaiochora" },
+  gm: [
+    { l: "Trajet + guichet · 45 min", u: "https://www.google.com/maps/dir/Fairytale,+Epar.Od.+Kaloudianon-Chrisoskalitissas+1,+Perivolia+730+12,+Gr%C3%A8ce/Selino+Travel+-+Anendyk+f%2Fb,+travel+Paleochora,+Paleochora+730+01,+Gr%C3%A8ce/@35.3055535,23.5847119,24643m/data=!3m2!1e3!4b1!4m14!4m13!1m5!1m1!1s0x149ceefe214f3f2d:0x66ae4994d85a6066!2m2!1d23.6120233!2d35.361541!1m5!1m1!1s0x149cc1507f78663d:0xc4728958f98f8686!2m2!1d23.6826144!2d35.2304938!3e0" }
+  ],
   boat: [P.paleochora, P.sougia, P.roumeli],
-  drive: "≈ 45 km · 1h jusqu'à Palaiochora + ferry 1h40",
-  route: "Réveil tôt : partir vers 7h pour être au port avant 8h (embarquement voiture). Route par l'intérieur, étroite et sinueuse. Arrivée à Agia Roumeli à 10h10 : la journée entière sur place.",
-  alert: { h: "Ferry Palaiochora 8h30 → Agia Roumeli 10h10", b: "Bateau Daskalogiannis (ANENDYK), escale à Sougia. Voiture à réserver auprès d'ANENDYK au plus tard la veille. À faire confirmer : une voiture ne peut pas être débarquée à Agia Roumeli, demander comment elle voyage jusqu'à Chora Sfakion et où la récupérer le 19 à 12h40." },
+  drive: "45 min jusqu'à Palaiochora + ferry 1h40",
+  route: "Partir vers 7h15 pour être au guichet Selino Travel / ANENDYK avant 8h. Arrivée à Agia Roumeli à 10h10 : la journée entière sur place.",
+  alert: { h: "Ferry Palaiochora 8h30 → Agia Roumeli 10h10 · 80 €", b: "Bateau Daskalogiannis (ANENDYK), escale à Sougia. Prendre les billets avant. À faire confirmer pour la voiture : elle ne peut pas être débarquée à Agia Roumeli, demander comment elle rejoint Chora Sfakion et où la récupérer le 19 à 12h40." },
   ferry: 1,
   en: [
     { n: "Palaiochora", t: "village", c: P.paleochora, d: "Café et petit-déj au port avant l'embarquement." },
@@ -239,21 +255,25 @@ var TRIP = [
   ],
   sur: [
     { n: "Agia Roumeli", t: "village", c: P.roumeli, d: "Village sans voiture au débouché des gorges de Samaria. Très calme le soir, quand les randonneurs sont repartis en bateau." },
-    { n: "Samaria à l'envers : les Portes de Fer", t: "rando", c: [35.2540, 23.9640], x: "2h30 AR", d: "Poser les sacs et remonter la gorge (≈ 3,5 km) jusqu'au passage le plus étroit : 3 m de large, 300 m de parois. Billet du parc ≈ 10 €, gratuit -18 ans. Partir dès l'arrivée, avant la grosse chaleur." },
-    { n: "Plage de galets", t: "plage", c: [35.2300, 23.9550], d: "Grande plage, eau très claire et fraîche. Chaussures d'eau utiles." },
-    { n: "Chapelle Agios Pavlos", t: "rando", o: 1, c: [35.2230, 24.0000], x: "3h AR", d: "Chapelle byzantine sur la plage, par le sentier côtier vers l'est. Sources d'eau douce." },
+    { n: "Samaria à l'envers : les Portes de Fer", t: "rando", c: [35.2540, 23.9640], x: "2h30 AR", d: "L'activité phare de la journée. Poser les sacs et remonter la gorge (≈ 3,5 km) jusqu'au passage le plus étroit : 3 m de large, 300 m de parois. Billet du parc ≈ 10 €, gratuit -18 ans. Partir dès l'arrivée, avant la grosse chaleur." },
+    { n: "Plage de galets", t: "plage", c: [35.2300, 23.9550], d: "L'après-midi : grande plage, eau très claire et fraîche. Chaussures d'eau utiles." },
+    { n: "Chapelle Agios Pavlos", t: "rando", o: 1, c: [35.2230, 24.0000], x: "3h AR", d: "Chapelle byzantine sur une plage, par le sentier côtier vers l'est. Sources d'eau douce." },
     { n: "Forteresse turque", t: "vue", o: 1, c: [35.2365, 23.9575], x: "1h AR", d: "Montée raide au-dessus du village, vue sur la mer de Libye au coucher du soleil." }
   ],
   eat: "Tavernas simples face à la mer, poisson et plats du jour.",
   tip: "Prévoir du liquide : pas de distributeur fiable à Agia Roumeli."
 },
 {
-  date: "2026-09-19", night: "Lykos", from: "Agia Roumeli", c: P.lykos, sea: [35.19, 24.06],
-  car: { o: P.sfakia, d: P.lykos, via: [P.anopolis], oL: "Chora Sfakion", dL: "Lykos (Akrogiali)" },
+  date: "2026-09-19", night: "Lykos", from: "Agia Roumeli", c: [35.2006, 24.0669], sea: [35.19, 24.06],
+  hotel: { n: "Taverna Akrogiali", c: [35.2006, 24.0669] },
+  car: { o: P.sfakia, d: [35.2006, 24.0669], via: [P.anopolis], oL: "Chora Sfakion", dL: "Akrogiali" },
+  gm: [
+    { l: "Trajet · 1h", u: "https://www.google.com/maps/dir/ANENDYK+SEAWAYS+S.A.+-+Hora+Sfakion,+Chora+Sfakion+730+11,+Gr%C3%A8ce/Taverna+Akrogiali,+Loutro+730+11,+Gr%C3%A8ce/@35.1983419,24.1021341,7772m/data=!3m1!1e3!4m14!4m13!1m5!1m1!1s0x149c9e18eb67af7b:0xee0d87fc0052967b!2m2!1d24.1365315!2d35.1999851!1m5!1m1!1s0x149c9edc858aed47:0x3a68dc2d456890c0!2m2!1d24.0669418!2d35.2006086!3e0" }
+  ],
   boat: [P.roumeli, P.loutro, P.sfakia],
-  drive: "Ferry 1h10 + ≈ 20 km · 45 min",
-  route: "Récupérer la voiture à Chora Sfakion, montée en lacets vers Anopolis puis descente vers Lykos. Demander à la Taverna Akrogiali l'état de la route et où se garer.",
-  alert: { h: "Ferry Agia Roumeli 11h30 → Chora Sfakion 12h40", b: "Bateau Daskalogiannis, escale à Loutro. Le vent peut perturber les traversées : regarder les rafales la veille.", blue: 1 },
+  drive: "Ferry 1h10 + 1h de voiture",
+  route: "Récupérer la voiture à Chora Sfakion, montée en lacets vers Anopolis puis descente vers la côte. Demander à la Taverna Akrogiali l'état de la route et où se garer.",
+  alert: { h: "Ferry Agia Roumeli 11h30 → Chora Sfakion 12h40 · 65 €", b: "Bateau Daskalogiannis, escale à Loutro. Le vent peut perturber les traversées : regarder les rafales la veille.", blue: 1 },
   ferry: 1,
   en: [
     { n: "Dernière baignade à Agia Roumeli", t: "plage", c: [35.2300, 23.9550], d: "Matinée tranquille avant le bateau de 11h30." },
@@ -262,44 +282,56 @@ var TRIP = [
     { n: "Anopolis", t: "village", c: P.anopolis, d: "Plateau de montagne au-dessus de la mer, village de bergers sfakiotes." }
   ],
   sur: [
-    { n: "Plage de Lykos", t: "plage", c: P.lykos, d: "Petite baie de galets entre Marmara et Finix, eau cristalline, quelques tavernas seulement." },
-    { n: "Finix (Phoenix)", t: "vue", c: [35.1980, 24.0680], x: "15 min", d: "Ancien port romain juste à l'est, chapelle blanche et coucher de soleil." },
-    { n: "Loutro à pied", t: "village", c: P.loutro, x: "40 min", d: "Par le sentier côtier via Finix : baie aux maisons blanches sans voiture. Un verre ou un dîner, retour avec une frontale." },
-    { n: "Plage de Marmara", t: "plage", o: 1, c: [35.2000, 24.0400], x: "30 min", d: "Criques de marbre au pied des gorges d'Aradena, à l'ouest par le sentier." }
+    { n: "Baie de Finix & Lykos", t: "plage", me: 1, c: [35.2000, 24.0640], d: "Juste devant l'hôtel : petites baies de galets, eau cristalline, ancien port romain et chapelle blanche." },
+    { n: "Loutro à pied", t: "village", c: P.loutro, x: "30 min", d: "Par le sentier côtier : baie aux maisons blanches sans voiture. Un verre ou un dîner, retour avec une frontale." },
+    { n: "Plage de Marmara", t: "plage", o: 1, c: [35.2000, 24.0400], x: "45 min", d: "Criques de marbre au pied des gorges d'Aradena, à l'ouest par le sentier." }
   ],
   eat: "Dîner à la Taverna Akrogiali, face à la mer.",
   tip: "Emporter une lampe frontale si vous revenez de Loutro ou Marmara à la nuit."
 },
 {
-  date: "2026-09-20", night: "Rodakino", from: "Lykos", c: P.rodakino, sea: [35.18, 24.34],
-  car: { o: P.lykos, d: P.rodakino, via: [P.anopolis, P.sfakia, P.frango], oL: "Lykos", dL: "Rodakino" },
-  drive: "≈ 50 km · 1h15",
-  route: "Remonter vers Anopolis, redescendre sur Chora Sfakion puis la côte vers l'est par Frangokastello.",
+  date: "2026-09-20", night: "Rodakino", from: "Lykos", c: [35.1861, 24.3065], sea: [35.18, 24.31],
+  hotel: { n: "Santa Marina Apartments", c: [35.1861, 24.3065] },
+  car: { o: [35.2006, 24.0669], d: [35.1861, 24.3065], via: [[35.2024, 24.1244], [35.1929, 24.1510], [35.1832, 24.2435]], oL: "Akrogiali", dL: "Santa Marina" },
+  gm: [
+    { l: "Trajet avec les plages · 1h40", u: "https://www.google.com/maps/dir/Taverna+Akrogiali,+Loutro+730+11,+Gr%C3%A8ce/Ilingas+Beach,+Gr%C3%A8ce/Agios+Charalambos+Beach,+730+11,+Gr%C3%A8ce/Orthi+Ammos,+Sfaki%C3%A1+730+11,+Gr%C3%A8ce/Santa+Marina+Apartments,+Rodakino,+Ag.+Vasilios+740+60,+Gr%C3%A8ce/@35.1869801,24.2984761,1000m/data=!3m1!1e3!4m32!4m31!1m5!1m1!1s0x149c9edc858aed47:0x3a68dc2d456890c0!2m2!1d24.0669418!2d35.2006086!1m5!1m1!1s0x149c9e15bfb381fd:0x8fb36804200607fa!2m2!1d24.124427!2d35.2024145!1m5!1m1!1s0x149b61ddcb62f725:0xfa97fd3640377717!2m2!1d24.1510034!2d35.1928734!1m5!1m1!1s0x149b66b1a509f363:0xbc8ffd72d62fb2f0!2m2!1d24.2434798!2d35.1831781!1m5!1m1!1s0x149b65d8c62bdfad:0x453c966e15bafddd!2m2!1d24.3065316!2d35.1860782!3e0" }
+  ],
+  drive: "1h40 de route",
+  route: "Remonter vers Anopolis, redescendre sur Chora Sfakion puis longer la côte vers l'est jusqu'à Rodakino, plage après plage.",
   en: [
-    { n: "Baignade du matin à Lykos", t: "plage", c: P.lykos, d: "La baie est encore vide avant l'arrivée des randonneurs." },
-    { n: "Sweetwater (Glyka Nera)", t: "plage", o: 1, c: [35.2020, 24.1080], x: "demi-journée", d: "Plage de galets où l'eau douce jaillit sous les cailloux. Bateau-taxi depuis Chora Sfakion, pas d'accès voiture." },
-    { n: "Gorges d'Imbros", t: "rando", o: 1, c: [35.2600, 24.1690], x: "2h30", d: "8 km de descente facile jusqu'à Komitades (10 min de Sfakia), taxi pour remonter à Imbros." },
+    { n: "Plage d'Ilingas", t: "plage", me: 1, c: [35.2024, 24.1244], d: "Crique de galets juste à l'ouest de Chora Sfakion, eau très claire." },
+    { n: "Sweetwater (Glyka Nera)", t: "plage", o: 1, c: [35.2020, 24.1080], x: "demi-journée", d: "Voisine d'Ilingas : plage où l'eau douce jaillit sous les galets. Bateau-taxi ou sentier, pas d'accès voiture." },
+    { n: "Plage d'Agios Charalambos", t: "plage", me: 1, c: [35.1929, 24.1510], d: "Petite plage juste à l'est de Chora Sfakion." },
+    { n: "Gorges d'Imbros", t: "rando", o: 1, c: [35.2600, 24.1690], x: "2h30", d: "8 km de descente facile jusqu'à Komitades, taxi pour remonter à Imbros." },
     { n: "Frangokastello", t: "site", c: P.frango, d: "Château vénitien carré au bord d'une plage de sable très peu profonde, parfaite pour se baigner." },
-    { n: "Orthi Ammos", t: "plage", c: [35.1840, 24.2400], d: "Juste à côté du château : dune de sable blond, plus sauvage." }
+    { n: "Orthi Ammos", t: "plage", me: 1, c: [35.1832, 24.2435], d: "Juste à côté du château : dune de sable blond, plus sauvage." }
   ],
   sur: [
     { n: "Rodakino", t: "village", c: P.rodakino, d: "Deux villages accrochés à la montagne au-dessus d'une côte de petites plages peu fréquentées." },
     { n: "Plages de Polyrizos & Koraka", t: "plage", c: [35.1925, 24.3560], d: "Sable et rochers, bon snorkeling, coucher de soleil." }
   ],
   eat: "Tavernas familiales, ambiance très locale.",
-  tip: "Faire le plein à Sfakia ou Frangokastello : demain longue étape."
+  tip: "Faire le plein à Sfakia ou Frangokastello : demain compter 4h de route avec les arrêts."
 },
 {
-  date: "2026-09-21", night: "Matala", from: "Rodakino", c: P.matala, sea: [34.99, 24.73],
-  car: { o: P.rodakino, d: P.matala, via: [P.plakias, [35.1560, 24.4650], P.spili, P.phaistos], oL: "Rodakino", dL: "Matala" },
-  drive: "≈ 120 km · 2h30 sans les arrêts",
-  route: "Côte sud par Plakias, Preveli, remontée vers Spili puis descente sur Agia Galini et la plaine de la Messara. Journée chargée : partir tôt pour faire Preveli au frais.",
+  date: "2026-09-21", night: "Matala", from: "Rodakino", c: [34.9962, 24.7551], sea: [34.99, 24.73],
+  hotel: { n: "Amalia Rooms", c: [34.9962, 24.7551] },
+  car: { o: [35.1861, 24.3065], d: [34.9962, 24.7551], via: [P.plakias, [35.1545, 24.4740], [35.1038, 24.5610], [35.0983, 24.6166], [35.0974, 24.6562]], oL: "Rodakino", dL: "Amalia Rooms" },
+  gm: [
+    { l: "Trajet avec les plages · 2h30-3h", u: "https://www.google.com/maps/dir/Santa+Marina+Apartments,+Rodakino,+Ag.+Vasilios+740+60,+Gr%C3%A8ce/Agios+Pavlos+Sandhills'+beach,+740+53,+Gr%C3%A8ce/%CE%A0%CE%B1%CF%81%CE%B1%CE%BB%CE%AF%CE%B1+%CE%91%CF%81%CE%BC%CE%B5%CE%BD%CF%8C%CF%80%CE%B5%CF%84%CF%81%CE%B1,+Louros+740+53,+Gr%C3%A8ce/Agios+Georgios+Snack+Bar,+Ag.+Galini+740+53,+Gr%C3%A8ce/Amalia+Rooms,+KTEL,+Matala+702+00,+Gr%C3%A8ce/@35.1364342,24.3850792,49389m/data=!3m1!1e3!4m37!4m36!1m5!1m1!1s0x149b65d8c62bdfad:0x453c966e15bafddd!2m2!1d24.3065316!2d35.1860782!1m10!1m1!1s0x149b14ed80148247:0x4c249f01c86cced8!2m2!1d24.5610151!2d35.1037726!3m4!1m2!1d24.591644!2d35.1006593!3s0x149b1441dab1e59f:0xd3ed23072a6c7be4!1m5!1m1!1s0x149b141fa9617d0b:0x9bcd7eaf2b67bda!2m2!1d24.6165763!2d35.0982623!1m5!1m1!1s0x149b16daa212c907:0x61e0e80a31111ab3!2m2!1d24.65616!2d35.097448!1m5!1m1!1s0x149b23fc6f17828d:0x580314d7b7e73347!2m2!1d24.7551132!2d34.996204!3e0!5m1!1e4" }
+  ],
+  drive: "2h30-3h de route · compter 4h avec les arrêts",
+  route: "Par Plakias, Preveli puis la côte jusqu'à Agios Pavlos, Agia Galini et Matala. Google Maps bugue sur le passage côtier après Preveli (il fait passer par Lefkogia) alors que la route existe bien. Si la route de Rodakino / Schinaria est barrée, le temps de trajet reste à peu près le même par l'intérieur.",
   en: [
-    { n: "Plakias", t: "village", c: P.plakias, d: "Station tranquille avec grande plage. Café en passant." },
-    { n: "Plage de Preveli", t: "plage", c: P.preveli, x: "2-3h", d: "Palmeraie le long d'une rivière qui se jette dans la mer. Parking payant sur la route du monastère, sentier raide ≈ 20 min, remontée en plein soleil : y aller le matin." },
-    { n: "Monastère de Preveli", t: "site", c: [35.1530, 24.4590], d: "Au-dessus de la mer, rôle clé pendant la Seconde Guerre mondiale. Épaules et genoux couverts." },
-    { n: "Spili", t: "village", c: P.spili, d: "Fontaine vénitienne aux lions qui crachent l'eau de source. Pause déjeuner." },
-    { n: "Palais de Phaistos", t: "site", c: P.phaistos, x: "1h30", d: "Palais minoen sur une colline face au Psiloritis. Moins de monde qu'à Knossos, cadre plus beau. Horaires à vérifier (fermeture fin d'après-midi)." }
+    { n: "Plakias", t: "village", o: 1, c: P.plakias, d: "Station tranquille avec grande plage. Café en passant." },
+    { n: "Pont de Preveli", t: "vue", me: 1, c: [35.1720, 24.4730], d: "Vieux pont de pierre sur la rivière, repéré sur votre carte. Petit arrêt photo." },
+    { n: "Plage de Preveli", t: "plage", me: 1, c: [35.1545, 24.4740], x: "2h", d: "Palmeraie le long d'une rivière qui se jette dans la mer. Par l'est (côté Dionyssos), la marche jusqu'à la plage est bien plus courte que depuis le monastère." },
+    { n: "Preveli Crete - Dionyssos", t: "resto", me: 1, c: [35.1565, 24.4790], d: "Chambres et restaurant tout près de la plage de Preveli, côté est. Bonne pause déjeuner." },
+    { n: "Plage d'Agia Irini", t: "plage", me: 1, c: [35.1500, 24.4960], d: "Petite plage juste à l'est de Preveli, repérée sur votre carte." },
+    { n: "Agios Pavlos Sandhills", t: "plage", me: 1, c: [35.1038, 24.5610], d: "Grandes dunes de sable qui descendent jusqu'à la mer, paysage unique en Crète." },
+    { n: "Plage d'Armenopetra", t: "plage", me: 1, c: [35.0983, 24.6166], d: "Plage voisine, plus sauvage, avec ses rochers." },
+    { n: "Agios Georgios Snack Bar", t: "resto", me: 1, c: [35.0974, 24.6562], d: "Snack sur la plage près d'Agia Galini." },
+    { n: "Palais de Phaistos", t: "site", o: 1, c: P.phaistos, x: "1h30", d: "Palais minoen face au Psiloritis, 15 min avant Matala. Seulement s'il reste du temps (fermeture en fin d'après-midi)." }
   ],
   sur: [
     { n: "Grottes de Matala", t: "site", c: [34.9930, 24.7480], d: "Tombes romaines creusées dans la falaise, rendues célèbres par les hippies des années 60. Entrée payante, fermées le soir." },
@@ -307,75 +339,94 @@ var TRIP = [
     { n: "Coucher de soleil sur la baie", t: "vue", c: [34.9945, 24.7505], d: "Depuis les terrasses au-dessus de la plage, face aux grottes." }
   ],
   eat: "Rue principale animée le soir, ambiance bohème.",
-  tip: "Preveli : le parking du bas se remplit vite, arriver avant 10h."
+  tip: "Longue journée : partir tôt de Rodakino pour profiter de Preveli au frais."
 },
 {
-  date: "2026-09-22", night: "Tsoutsouros", from: "Matala", c: P.tsoutsouros, sea: [34.97, 25.28],
-  car: { o: P.matala, d: P.tsoutsouros, via: [P.gortyna], oL: "Matala", dL: "Tsoutsouros" },
-  drive: "≈ 85 km · 1h45",
-  route: "Traversée de la plaine de la Messara vers l'est (oliviers, serres), puis descente en lacets vers la côte. Dernière partie étroite.",
+  date: "2026-09-22", night: "Tsoutsouros", from: "Matala", c: [34.9847, 25.2831], sea: [34.97, 25.28],
+  hotel: { n: "Apollo Hotel", c: [34.9847, 25.2831] },
+  car: { o: [34.9962, 24.7551], d: [34.9847, 25.2831], via: [[34.9309, 24.9243], [34.9330, 24.9491]], oL: "Matala", dL: "Apollo Hotel" },
+  gm: [
+    { l: "Trajet par Lentas · 2h30", u: "https://www.google.com/maps/dir/Amalia+Rooms,+KTEL,+Matala+702+00,+Gr%C3%A8ce/Lentas,+704+00,+Gr%C3%A8ce/%CE%A0%CE%B1%CF%81%CE%B1%CE%BB%CE%AF%CE%B1+%CE%A7%CE%B1%CE%BC%CE%AC%CE%BC,+Gortyne+704+00,+Gr%C3%A8ce/Apollo+Hotel,+Ag.+Panteleimon+700+10,+Gr%C3%A8ce/@34.9864517,24.8588329,49480m/data=!3m1!1e3!4m26!4m25!1m5!1m1!1s0x149b23fc6f17828d:0x580314d7b7e73347!2m2!1d24.7551132!2d34.996204!1m5!1m1!1s0x149adf9ec8d951c5:0xa00bd2f74c29230!2m2!1d24.9243159!2d34.9308888!1m5!1m1!1s0x149adfb2fbc31d7d:0x70433fb14db17eee!2m2!1d24.9491457!2d34.9329657!1m5!1m1!1s0x149aed0052110d07:0x9b5f52e235f60b3e!2m2!1d25.2830819!2d34.9846972!3e0!5m1!1e4" }
+  ],
+  drive: "2h30 de route",
+  route: "Descendre vers le sud jusqu'à Lentas (attention à la route, étroite et en lacets), puis remonter et traverser vers l'est jusqu'à Tsoutsouros.",
   en: [
-    { n: "Plage de Kommos", t: "plage", c: [35.0110, 24.7560], d: "Longue plage sauvage juste au nord de Matala, zone de ponte des tortues caretta. Baignade du matin. Attention aux courants." },
-    { n: "Agia Triada", t: "site", o: 1, c: [35.0590, 24.7920], d: "Villa minoenne à 3 km de Phaistos, souvent déserte." },
-    { n: "Gortyne", t: "site", c: P.gortyna, x: "1h", d: "Ancienne capitale romaine : odéon, basilique Agios Titos et le Code de Gortyne, plus ancien texte de lois d'Europe gravé dans la pierre." },
-    { n: "Zaros & lac Votomos", t: "village", o: 1, c: [35.1300, 24.9000], d: "Détour de 30 min vers la montagne : lac de source, truite grillée, départ des gorges de Rouvas." }
+    { n: "Plage de Kommos", t: "plage", o: 1, c: [35.0110, 24.7560], d: "Longue plage sauvage juste au nord de Matala, zone de ponte des tortues caretta. Baignade du matin. Attention aux courants." },
+    { n: "Lentas", t: "village", me: 1, c: [34.9309, 24.9243], d: "Village au bout de la route, sous un cap en forme de lion, avec les restes d'un sanctuaire antique d'Asclépios." },
+    { n: "Plage de Hamam", t: "plage", me: 1, c: [34.9330, 24.9491], d: "Crique juste à l'est de Lentas." },
+    { n: "Gortyne", t: "site", o: 1, c: P.gortyna, x: "1h", d: "Ancienne capitale romaine : odéon, basilique Agios Titos et le Code de Gortyne, plus ancien texte de lois d'Europe. Détour de 30 min vers le nord." }
   ],
   sur: [
     { n: "Tsoutsouros", t: "village", c: P.tsoutsouros, d: "Petit port de pêche au fond d'une baie, ambiance très grecque, peu de touristes étrangers." },
     { n: "Plage du village", t: "plage", c: [34.9830, 25.2835], d: "Longue plage de sable gris devant les tavernas, eau calme." }
   ],
   eat: "Poisson du jour et meze sur le front de mer.",
-  tip: "Journée plus courte : bon moment pour souffler après les grosses étapes."
+  tip: "La route de Lentas est lente : ne pas se fier au GPS, garder de la marge pour arriver avant la nuit."
 },
 {
-  date: "2026-09-23", night: "Makry Gialos", from: "Tsoutsouros", c: P.makrygialos, sea: [35.02, 25.97],
-  car: { o: P.tsoutsouros, d: P.makrygialos, via: [P.viannos, P.sarakina, P.myrtos, P.ierapetra], oL: "Tsoutsouros", dL: "Makry Gialos" },
-  drive: "≈ 105 km · 2h15",
-  route: "Remontée vers Ano Viannos, puis la route du sud-est par Myrtos et Ierapetra, et la côte jusqu'à Makry Gialos.",
+  date: "2026-09-23", night: "Makry Gialos", from: "Tsoutsouros", c: [35.0409, 25.9856], sea: [35.02, 25.98],
+  hotel: { n: "Helios (Tzirvelakis)", c: [35.0409, 25.9856] },
+  car: { o: [34.9847, 25.2831], d: [35.0409, 25.9856], via: [[34.9893, 25.3468], [34.9908, 25.4415], [34.9836, 25.4995], [34.9914, 25.5333], P.myrtos, P.ierapetra], oL: "Tsoutsouros", dL: "Helios" },
+  gm: [
+    { l: "Trajet par la côte · 2h15", u: "https://www.google.com/maps/dir/Tsoutsouros,+Gr%C3%A8ce/Paralia+Listi,+Viannos+700+04,+Gr%C3%A8ce/%CE%9A%CE%BF%CE%BB%CF%8D%CE%BC%CF%80%CE%BF%CE%B9,+700+04,+Gr%C3%A8ce/Paralia+Sindonia,+Sidonia+700+04,+Gr%C3%A8ce/Tertsa+beach,+Tertsa+700+04,+Gr%C3%A8ce/HELIOS+-+%CE%A4%CE%96%CE%99%CE%A1%CE%92%CE%95%CE%9B%CE%91%CE%9A%CE%97%CE%A3+%CE%9D%CE%99%CE%9A%CE%9F%CE%9B%CE%91%CE%9F%CE%A3,+%CE%A3%CE%A9%CE%A0%CE%91%CE%A4%CE%91,+%CE%A3%CE%97%CE%A4%CE%95%CE%99%CE%91+720+55,+Gr%C3%A8ce/@35.0131488,25.3089318,98928m/data=!3m1!1e3!4m38!4m37!1m5!1m1!1s0x149a9349a8c831a5:0xaff05cec255bb8d1!2m2!1d25.288235!2d34.9865081!1m5!1m1!1s0x149a93b0ede7679d:0x45927b43317b0064!2m2!1d25.3468142!2d34.9892839!1m5!1m1!1s0x149a904448bdb7d9:0xa973735c92e53fdb!2m2!1d25.4414539!2d34.9908279!1m5!1m1!1s0x149a9aea8e95898b:0x11d11a41645d592!2m2!1d25.4995447!2d34.9836198!1m5!1m1!1s0x149a9b31e8a0ce0f:0xdd6917d6080f43ee!2m2!1d25.5333283!2d34.9913703!1m5!1m1!1s0x14906190cb18c87d:0x7206c91214f6792f!2m2!1d25.9855581!2d35.0408957!3e0" }
+  ],
+  drive: "2h15 de route",
+  route: "On longe la côte sud vers l'est, de plage en plage, puis Myrtos, Ierapetra et Makry Gialos.",
   en: [
-    { n: "Ano Viannos", t: "village", c: P.viannos, d: "Village en balcon, platane géant et vue sur la mer de Libye." },
+    { n: "Plage de Listi", t: "plage", me: 1, c: [34.9893, 25.3468], d: "Première crique après Tsoutsouros, côté Viannos." },
+    { n: "Kolymboi", t: "plage", me: 1, c: [34.9908, 25.4415], d: "Arrêt baignade sur la côte de Viannos, près d'Arvi." },
     { n: "Arvi", t: "village", o: 1, c: [34.9880, 25.4480], d: "Micro-climat très chaud : bananiers, monastère au pied d'une petite gorge." },
-    { n: "Gorges de Sarakina", t: "rando", c: P.sarakina, x: "1-2h", d: "Petite gorge près de Mythi : on marche (et on nage parfois) dans l'eau entre des parois étroites. Chaussures d'eau." },
-    { n: "Myrtos", t: "village", c: P.myrtos, d: "Village blanc en bord de mer, parfait pour déjeuner et se baigner." },
-    { n: "Ierapetra", t: "village", c: P.ierapetra, d: "Ville la plus au sud d'Europe : forteresse vénitienne de Kales sur le port." },
-    { n: "Île de Chrysi", t: "bateau", o: 1, c: [34.8740, 25.7050], d: "Île aux cèdres et eau turquoise. Bateaux depuis Ierapetra le matin, retour fin d'après-midi : prend toute la journée." }
+    { n: "Plage de Sidonia", t: "plage", me: 1, c: [34.9836, 25.4995], d: "Plage tranquille de la côte sud-est." },
+    { n: "Plage de Tertsa", t: "plage", me: 1, c: [34.9914, 25.5333], d: "Petit village les pieds dans l'eau, plage calme avec tavernas." },
+    { n: "Gorges de Sarakina", t: "rando", o: 1, c: P.sarakina, x: "1-2h", d: "Petite gorge près de Mythi : on marche (et on nage parfois) dans l'eau entre des parois étroites. Chaussures d'eau." },
+    { n: "Myrtos", t: "village", c: P.myrtos, d: "Village blanc en bord de mer, parfait pour déjeuner." },
+    { n: "Ierapetra", t: "village", o: 1, c: P.ierapetra, d: "Ville la plus au sud d'Europe : forteresse vénitienne de Kales sur le port." }
   ],
   sur: [
-    { n: "Plage de Makry Gialos", t: "plage", c: P.makrygialos, d: "Longue plage de sable très peu profonde, eau calme, tavernas les pieds dans le sable." },
+    { n: "Plage de Makry Gialos", t: "plage", c: [35.0397, 25.9744], d: "Longue plage de sable très peu profonde, eau calme, tavernas les pieds dans le sable." },
     { n: "Monastère de Kapsa", t: "site", c: [35.0197, 26.0578], d: "Accroché à la falaise à l'entrée d'une gorge, 10 min à l'est. Superbe en fin de journée." }
   ],
   eat: "Tavernas de la plage, légumes de la région (Ierapetra = potager de la Crète).",
   tip: "Faire le plein à Ierapetra : demain routes de montagne peu équipées."
 },
 {
-  date: "2026-09-24", night: "Palekastro", from: "Makry Gialos", c: P.palekastro, sea: [35.20, 26.30],
-  car: { o: P.makrygialos, d: P.palekastro, via: [[35.0197, 26.0578], P.ziros, P.xerokampos, P.zakros], oL: "Makry Gialos", dL: "Palekastro" },
-  drive: "≈ 100 km · 2h30 par l'extrême est",
-  route: "Itinéraire conseillé : Kapsa, Goudouras, plateau de Ziros, Xerokampos, Kato Zakros, Palekastro. Routes de montagne. La portion Xerokampos → Kato Zakros est en partie en piste : en cas de doute, repasser par Ziros (asphalte). Variante courte : Lithines, Sitia, Palekastro (≈ 60 km · 1h10).",
+  date: "2026-09-24", night: "Palekastro", from: "Makry Gialos", c: [35.2141, 26.2653], sea: [35.21, 26.29],
+  hotel: { n: "Manos Small House, Kouremenos", c: [35.2141, 26.2653] },
+  car: { o: [35.0409, 25.9856], d: [35.2141, 26.2653], via: [[35.0119, 26.1546], P.xerokampos, [35.0972, 26.2633]], oL: "Makry Gialos", dL: "Kouremenos" },
+  gm: [
+    { l: "Trajet par la côte · 2h30", u: "https://www.google.com/maps/dir/HELIOS+-+%CE%A4%CE%96%CE%99%CE%A1%CE%92%CE%95%CE%9B%CE%91%CE%9A%CE%97%CE%A3+%CE%9D%CE%99%CE%9A%CE%9F%CE%9B%CE%91%CE%9F%CE%A3,+%CE%A3%CE%A9%CE%A0%CE%91%CE%A4%CE%91,+%CE%A3%CE%97%CE%A4%CE%95%CE%99%CE%91+720+55,+Gr%C3%A8ce/Livari+beach,+%CE%9D%CF%8C%CF%84%CE%B9%CE%BF+%CE%9A%CF%81%CE%B7%CF%84%CE%B9%CE%BA%CF%8C+%CE%A0%CE%AD%CE%BB%CE%B1%CE%B3%CE%BF%CF%82,,+Lefki+720+59,+Gr%C3%A8ce/Kato+Zakros+beach,+Itanos+723+00,+Gr%C3%A8ce/Manos+Small+House+Kouremenos,+%CE%95%CF%80%CE%B1%CF%81.%CE%9F%CE%B4.+%CE%A3%CE%B7%CF%84%CE%B5%CE%AF%CE%B1%CF%82+-+%CE%A0%CE%B1%CE%BBe%CE%BA%CE%AC%CF%83%CF%84%CF%81%CE%BF%CF%85+-+%CE%92%CE%B1%CF%8A,+Palekastro+723+00,+Gr%C3%A8ce/@35.1403715,25.9669013,11z/data=!4m26!4m25!1m5!1m1!1s0x14906190cb18c87d:0x7206c91214f6792f!2m2!1d25.9855581!2d35.0408957!1m5!1m1!1s0x149058a3691d1ec9:0xc15f53bacd724bb7!2m2!1d26.1546014!2d35.0118782!1m5!1m1!1s0x1490fa4780d7ee3d:0x8c8374e3c15eabc0!2m2!1d26.2633345!2d35.0971831!1m5!1m1!1s0x1490e551117712cd:0x73ab01d116d0df42!2m2!1d26.2653307!2d35.2140628!3e0" }
+  ],
+  drive: "2h30 de route",
+  route: "On longe la côte : Kapsa, Goudouras, Livari, puis l'extrême est par Xerokampos et Kato Zakros, et remontée vers Palekastro. Routes de montagne. Si une portion est en piste, vérifier que l'assurance de la location la couvre.",
   en: [
-    { n: "Plateau de Ziros", t: "village", c: P.ziros, d: "Village de montagne, café au kafeneio." },
-    { n: "Xerokampos", t: "plage", c: P.xerokampos, x: "2h", d: "Bout du monde : plusieurs plages de sable blanc quasi désertes. Baignade et pique-nique." },
-    { n: "Palais de Kato Zakros", t: "site", c: P.zakros, d: "4e grand palais minoen, au bord d'une baie paisible avec tavernas. Horaires à vérifier." },
+    { n: "Plage de Livari", t: "plage", me: 1, c: [35.0119, 26.1546], d: "Crique abritée près de Goudouras, côté Lefki." },
+    { n: "Xerokampos", t: "plage", o: 1, c: P.xerokampos, x: "1h", d: "Bout du monde : plusieurs plages de sable blanc quasi désertes." },
+    { n: "Plage de Kato Zakros", t: "plage", me: 1, c: [35.0972, 26.2633], d: "Baie paisible avec tavernas, juste à côté du 4e grand palais minoen (horaires à vérifier)." },
     { n: "Gorge des Morts", t: "rando", o: 1, c: [35.0990, 26.2450], x: "1h30", d: "Grottes funéraires minoennes dans les parois. On peut n'en faire que la dernière partie depuis Kato Zakros." }
   ],
   sur: [
-    { n: "Palekastro", t: "village", c: P.palekastro, d: "Village agricole tranquille, bonne base pour l'extrême est." },
-    { n: "Kouremenos", t: "plage", c: [35.2050, 26.2800], d: "Spot de windsurf et kite grâce au vent régulier, location de matériel." },
-    { n: "Chiona", t: "plage", c: [35.1920, 26.2860], d: "Petite plage avec tavernas de poisson, à côté des fouilles minoennes." }
+    { n: "Kouremenos", t: "plage", c: [35.2050, 26.2800], d: "Juste à côté de l'hôtel : spot de windsurf et kite grâce au vent régulier, location de matériel." },
+    { n: "Chiona", t: "plage", c: [35.1920, 26.2860], d: "Petite plage avec tavernas de poisson, à côté des fouilles minoennes." },
+    { n: "Palekastro", t: "village", c: P.palekastro, d: "Village agricole tranquille, bonne base pour l'extrême est." }
   ],
   eat: "Tavernas de poisson à Chiona au coucher du soleil.",
-  tip: "Vérifier que l'assurance de la location couvre les pistes avant de s'engager vers Zakros."
+  tip: "Vai est à 10 min de l'hôtel : y aller tôt demain avant les cars."
 },
 {
-  date: "2026-09-25", night: "Mochlos", from: "Palekastro", c: P.mochlos, sea: [35.20, 25.90],
-  car: { o: P.palekastro, d: P.mochlos, via: [P.vai, P.toplou, P.sitia], oL: "Palekastro", dL: "Mochlos" },
-  drive: "≈ 70 km · 1h30 avec le crochet par Vai",
-  route: "Crochet au nord vers Vai, puis Toplou, Sitia et la route côtière nord jusqu'à Mochlos (descente en lacets sur la fin).",
+  date: "2026-09-25", night: "Mochlos", from: "Palekastro", c: [35.1836, 25.9055], sea: [35.20, 25.90],
+  hotel: { n: "Remezzo - La Marinière", c: [35.1836, 25.9055] },
+  car: { o: [35.2141, 26.2653], d: [35.1836, 25.9055], via: [P.vai, [35.2868, 26.2888], P.toplou, [35.2197, 26.0693]], oL: "Kouremenos", dL: "Mochlos" },
+  gm: [
+    { l: "Trajet avec les plages · 2h", u: "https://www.google.com/maps/dir/Manos+Small+House+Kouremenos,+%CE%95%CF%80%CE%B1%CF%81.%CE%9F%CE%B4.+%CE%A3%CE%B7%CF%84%CE%B5%CE%AF%CE%B1%CF%82+-+%CE%A0%CE%B1%CE%BBe%CE%BA%CE%AC%CF%83%CF%84%CF%81%CE%BF%CF%85+-+%CE%92%CE%B1%CF%8A,+Palekastro+723+00,+Gr%C3%A8ce/Vai,+Epar.Od.+Monis+Toplous+-+Vai,+Toplou+723+00,+Gr%C3%A8ce/Tenda+beach,+Itanos+723+00,+Gr%C3%A8ce/Beach+Agii+Pantes,+Sit%C3%ADa+723+00,+Gr%C3%A8ce/Remezzo+-+La+Marini%C3%A8re,+Mochlos+-+Tourloti,+Sitia+720+57,+Gr%C3%A8ce/@35.1265446,25.7640242,49395m/data=!3m1!1e3!4m32!4m31!1m5!1m1!1s0x1490e551117712cd:0x73ab01d116d0df42!2m2!1d26.2653307!2d35.2140628!1m5!1m1!1s0x1490e66f71d012b1:0xfa8fee74909ca3c5!2m2!1d26.264931!2d35.254407!1m5!1m1!1s0x1490e70ff9c54465:0xfd18bfc864e5fb46!2m2!1d26.2888294!2d35.2867921!1m5!1m1!1s0x1490ed6bdf8cddb9:0x8f6a8897948aee1a!2m2!1d26.0692691!2d35.2196651!1m5!1m1!1s0x14908ee6d2bbba9f:0xabbee603dd2f69c2!2m2!1d25.9054611!2d35.1836237!3e0" }
+  ],
+  drive: "2h de route avec les arrêts",
+  route: "Nord vers Vai et Itanos, puis retour par Toplou, Sitia et la route côtière nord jusqu'à Mochlos (descente en lacets sur la fin).",
   en: [
-    { n: "Palmeraie de Vai", t: "plage", c: P.vai, d: "Plus grande palmeraie naturelle d'Europe au bord d'une plage de sable. Arriver avant 10h. Parking payant." },
-    { n: "Itanos", t: "site", o: 1, c: [35.2630, 26.2650], d: "Ruines antiques à 3 km de Vai et petites plages bien plus calmes." },
+    { n: "Palmeraie de Vai", t: "plage", me: 1, c: [35.2544, 26.2649], d: "Plus grande palmeraie naturelle d'Europe au bord d'une plage de sable. Arriver avant 10h. Parking payant." },
+    { n: "Plage de Tenda (Itanos)", t: "plage", me: 1, c: [35.2868, 26.2888], d: "Au nord de Vai, à côté des ruines antiques d'Itanos : beaucoup plus calme." },
     { n: "Monastère de Toplou", t: "site", c: P.toplou, d: "Monastère fortifié du XVe, icônes remarquables. Boutique : huile d'olive et vin du monastère." },
-    { n: "Sitia", t: "village", c: P.sitia, d: "Port et front de mer vivants, déjeuner. Région réputée pour son huile d'olive." },
+    { n: "Plage d'Agii Pantes", t: "plage", me: 1, c: [35.2197, 26.0693], d: "Plage près de Sitia, dernier arrêt baignade avant Mochlos." },
+    { n: "Sitia", t: "village", o: 1, c: P.sitia, d: "Port et front de mer vivants. Région réputée pour son huile d'olive." },
     { n: "Gorge de Richtis", t: "rando", o: 1, c: [35.1700, 25.9730], x: "3h AR", d: "Sentier ombragé le long d'un ruisseau jusqu'à une cascade de 20 m, puis une plage. Départ près d'Exo Mouliana." }
   ],
   sur: [
@@ -383,22 +434,27 @@ var TRIP = [
     { n: "Îlot de Mochlos", t: "plage", c: [35.1880, 25.9020], d: "À ≈ 150 m du quai. Traverser à la nage seulement par mer calme : courant dans le chenal." }
   ],
   eat: "Dernier dîner en terrasse face à l'îlot, au coucher du soleil.",
-  tip: "Préparer la route du lendemain : ≈ 1h45 jusqu'à l'aéroport d'Héraklion."
+  tip: "Demain : 1h50 en direct jusqu'à Héraklion, 3h30 avec vos arrêts plage."
 },
 {
-  date: "2026-09-26", night: "Héraklion", last: 1, from: "Mochlos", c: P.her, sea: [35.36, 25.18],
-  car: { o: P.mochlos, d: P.her, via: [[35.1900, 25.7160]], oL: "Mochlos", dL: "Aéroport d'Héraklion" },
-  drive: "≈ 110 km · 1h45",
-  route: "Route côtière jusqu'à Pacheia Ammos, puis nationale nord par Agios Nikolaos jusqu'à Héraklion. Prévoir le temps de rendre la voiture et d'être à l'aéroport 2h avant le vol.",
+  date: "2026-09-26", night: "Héraklion", last: 1, from: "Mochlos", c: [35.3381, 25.1614], sea: [35.36, 25.18],
+  car: { o: [35.1836, 25.9055], d: [35.3381, 25.1614], via: [[35.2614, 25.7234], [35.3379, 25.7189], [35.3197, 25.5675]], oL: "Mochlos", dL: "Héraklion" },
+  gm: [
+    { l: "Trajet avec les plages · 3h30", u: "https://www.google.com/maps/dir/Remezzo+-+La+Marini%C3%A8re,+Mochlos+-+Tourloti,+Sitia+720+57,+Gr%C3%A8ce/Elounda,+Gr%C3%A8ce/Beach+Agios+Antonios,+D%C3%A8me+d'%C3%81gios+Nik%C3%B3laos+720+53,+Gr%C3%A8ce/Paralia+Milatou,+Milatos+Beach+724+00,+Gr%C3%A8ce/Gomega,+Avenue,+Leof.+Ikarou+83,+Iraklio+716+01,+Gr%C3%A8ce/@35.3197152,25.4768493,12z/data=!4m32!4m31!1m5!1m1!1s0x14908ee6d2bbba9f:0xabbee603dd2f69c2!2m2!1d25.9054611!2d35.1836237!1m5!1m1!1s0x1490833b5f8b5ad7:0x500bd2ce2ba8940!2m2!1d25.7234164!2d35.2613505!1m5!1m1!1s0x14909c4e53073251:0x7712b6b7b7426c76!2m2!1d25.718879!2d35.3379383!1m5!1m1!1s0x149a70aab0e976c9:0xaabda8bb5aff0f84!2m2!1d25.5674878!2d35.3197152!1m5!1m1!1s0x149a67d432625589:0x6379404e6ffc3355!2m2!1d25.1614223!2d35.3381454!3e0" }
+  ],
+  drive: "1h50 en direct · 3h30 avec les arrêts",
+  route: "Route côtière jusqu'à Agios Nikolaos, crochet par Elounda, puis nationale nord par Milatos jusqu'à Héraklion. Garder de la marge pour rendre la voiture avant le vol.",
   en: [
-    { n: "Agios Nikolaos", t: "village", o: 1, c: [35.1900, 25.7160], d: "Petite ville autour du lac Voulismeni, café en passant." },
-    { n: "Spinalonga", t: "site", o: 1, c: [35.2970, 25.7380], x: "3h", d: "Île-forteresse, ancienne léproserie. Bateau depuis Plaka ou Elounda. Seulement si le vol est en fin de journée." },
-    { n: "Palais de Knossos", t: "site", o: 1, c: [35.2980, 25.1630], x: "1h30", d: "Le grand palais minoen, à 20 min de l'aéroport. Si le vol est le soir. Billet en ligne conseillé, beaucoup de monde." }
+    { n: "Elounda", t: "village", me: 1, c: [35.2614, 25.7234], d: "Port chic face à la presqu'île de Spinalonga, cité antique engloutie d'Olous à côté." },
+    { n: "Spinalonga", t: "site", o: 1, c: [35.2970, 25.7380], x: "2h30", d: "Île-forteresse, ancienne léproserie. Bateau depuis Elounda ou Plaka. Seulement si le vol est en fin de journée." },
+    { n: "Plage d'Agios Antonios", t: "plage", me: 1, c: [35.3379, 25.7189], d: "Crique au nord d'Elounda, dernière baignade dans le golfe de Mirabello." },
+    { n: "Plage de Milatos", t: "plage", me: 1, c: [35.3197, 25.5675], d: "Plage de galets au calme, sur la route d'Héraklion." },
+    { n: "Palais de Knossos", t: "site", o: 1, c: [35.2980, 25.1630], x: "1h30", d: "Le grand palais minoen, à 20 min de l'aéroport. Si le vol est le soir. Billet en ligne conseillé." }
   ],
   sur: [
-    { n: "Aéroport d'Héraklion", t: "depart", c: P.her, d: "Rendre la voiture de location (vérifier la règle du plein dans le contrat), puis enregistrement." }
+    { n: "Gomega (Leof. Ikarou)", t: "depart", me: 1, c: [35.3381, 25.1614], d: "Votre dernier point avant l'aéroport, à quelques minutes. Faire le plein avant si le contrat de location l'exige." }
   ],
-  eat: "Dernier petit-déj face à l'îlot de Mochlos, ou bougatsa à Héraklion si le vol est l'après-midi.",
+  eat: "Dernier petit-déj face à l'îlot de Mochlos, ou déjeuner à Elounda.",
   tip: "Vol le soir ? Knossos est sur le chemin, à 20 min de l'aéroport."
 }
 ];
@@ -542,9 +598,9 @@ function stopList(list, d, key) {
     return '<li class="stop' + (vu[id] ? " done" : "") + '" style="--c:' + tg.c + '">' +
       '<button class="dot" data-vu="' + id + '" aria-label="Marquer comme vu">' + CHECK + '</button>' +
       '<div class="nm">' + esc(s.n) + '</div>' +
-      '<div class="meta" style="margin-top:2px"><span class="tag">' + tg.l + '</span>' + (s.o ? '<span class="opt">Option</span>' : '') + (s.x ? '<span>⏱ ' + esc(s.x) + '</span>' : '') + '</div>' +
+      '<div class="meta" style="margin-top:2px"><span class="tag">' + tg.l + '</span>' + (s.me ? '<span class="me">★ Votre repère</span>' : '') + (s.o ? '<span class="opt">Option</span>' : '') + (s.x ? '<span>⏱ ' + esc(s.x) + '</span>' : '') + '</div>' +
       '<div class="desc">' + esc(s.d) + '</div>' +
-      (s.c ? '<div class="meta"><a href="' + gmapsTo(s.c) + '" target="_blank" rel="noopener">Itinéraire ↗</a></div>' : '') +
+      (s.c || s.u ? '<div class="meta"><a href="' + (s.u || gmapsTo(s.c)) + '" target="_blank" rel="noopener">Itinéraire ↗</a></div>' : '') +
       '</li>';
   }).join("") + '</ul>';
 }
@@ -558,7 +614,7 @@ function viewDay() {
   var h = rail() +
     '<header class="hero"><div class="num">' + (st.i + 1) + '</div><div class="sun"></div>' +
     '<div class="kick">Jour ' + (st.i + 1) + ' · ' + fmtLong(d.date) + '</div>' +
-    '<h1>' + esc(d.night) + '</h1><div class="from">' + (d.last ? "retour" : "nuit ici") + ' · depuis ' + esc(d.from) + '</div>' + cd +
+    '<h1>' + esc(d.night) + '</h1><div class="from">' + (d.last ? "retour" : "nuit ici") + ' · depuis ' + esc(d.from) + '</div>' + (d.hotel ? '<div class="hotel">🛏️ ' + esc(d.hotel.n) + '</div>' : '') + cd +
     '<svg viewBox="0 0 400 46" preserveAspectRatio="none"><path d="M0 22 C60 4 120 40 200 22 S340 6 400 22 V46 H0Z" fill="#F3ECDF" opacity=".35"/><path d="M0 30 C70 16 130 44 210 30 S350 18 400 30 V46 H0Z" fill="#F3ECDF"/></svg>' +
     '</header>' +
     '<main class="wrap">' +
@@ -568,9 +624,9 @@ function viewDay() {
     '<section class="card rise" style="animation-delay:.05s"><h2>La route <em>' + (d.car ? "en voiture" : "à pied & en bateau") + '</em></h2>' +
     (d.car ? '<div class="rt"><span>' + esc(d.car.oL) + '</span><i></i><span>' + esc(d.car.dL) + '</span></div>' : '') +
     '<div class="big">' + esc(d.drive) + '</div><div class="muted">' + esc(d.route) + '</div>' +
-    '<div class="btns">' + (d.car ? '<a class="btn" href="' + gmapsDir(d.car) + '" target="_blank" rel="noopener">🧭 Lancer le GPS</a>' : '') +
-    '<a class="btn ghost" href="' + gmapsTo(d.c) + '" target="_blank" rel="noopener">📍 ' + esc(d.night) + '</a></div>' +
-    '<p class="small muted" style="margin:10px 0 0">Distances et temps approximatifs : sur les routes de montagne, compter +20 % sur le GPS.</p></section>' +
+    '<div class="btns">' + (d.gm ? d.gm.map(function (g) { return '<a class="btn" href="' + g.u + '" target="_blank" rel="noopener">🧭 ' + esc(g.l) + '</a>'; }).join('') : (d.car ? '<a class="btn" href="' + gmapsDir(d.car) + '" target="_blank" rel="noopener">🧭 Lancer le GPS</a>' : '')) +
+    '<a class="btn ghost" href="' + gmapsTo(d.c) + '" target="_blank" rel="noopener">📍 ' + esc(d.hotel ? d.hotel.n : d.night) + '</a></div>' +
+    '<p class="small muted" style="margin:10px 0 0">' + (d.gm ? 'Vos trajets Google Maps, avec vos arrêts. ' : '') + 'Sur les routes de montagne, compter +20 % sur le GPS.</p></section>' +
     '<section class="card rise" style="animation-delay:.1s"><h2>En chemin <em>à cocher une fois vu</em></h2>' + stopList(d.en, d, "e") + '</section>' +
     '<section class="card rise" style="animation-delay:.15s"><h2>Sur place <em>' + esc(d.night) + '</em></h2>' + stopList(d.sur, d, "s") + '</section>' +
     '<div class="duo rise" style="animation-delay:.2s"><div class="card mini"><h3>🍽️ Manger</h3><p>' + esc(d.eat) + '</p></div><div class="card mini"><h3>💡 Astuce</h3><p>' + esc(d.tip) + '</p></div></div>' +
@@ -603,7 +659,7 @@ function viewMeteo() {
 function viewInfos() {
   return '<div class="ptitle"><h1>Pratique</h1><p>10 nuits, de Réthymnon à Mochlos</p></div><div class="greek"></div><main class="wrap info">' +
     '<section class="card rise"><h3>🚨 Urgences</h3><ul><li><b>112</b> : numéro d\'urgence européen (parle anglais)</li><li><b>1571</b> : police touristique</li><li>Pharmacies : croix verte, une de garde par secteur (affichée sur la porte)</li></ul></section>' +
-    '<section class="card rise" style="animation-delay:.05s"><h3>⛴️ Ferries (18 et 19 sept)</h3><ul><li><b>Ven 18</b> : Palaiochora 8h30 → Agia Roumeli 10h10</li><li><b>Sam 19</b> : Agia Roumeli 11h30 → Chora Sfakion 12h40</li><li>Bateau Daskalogiannis, compagnie ANENDYK : <a href="https://anendyk.gr/routes/" target="_blank" rel="noopener">anendyk.gr</a></li><li>Voiture : réservation auprès d\'ANENDYK au moins 1 jour avant. Elle ne peut pas débarquer à Agia Roumeli : faire confirmer comment elle rejoint Chora Sfakion.</li><li>Le vent peut annuler une traversée.</li></ul></section>' +
+    '<section class="card rise" style="animation-delay:.05s"><h3>⛴️ Ferries (18 et 19 sept)</h3><ul><li><b>Ven 18</b> : Palaiochora 8h30 → Agia Roumeli 10h10 · 80 €</li><li><b>Sam 19</b> : Agia Roumeli 11h30 → Chora Sfakion 12h40 · 65 €</li><li>Billets à prendre à l\'avance.</li><li>Bateau Daskalogiannis, compagnie ANENDYK : <a href="https://anendyk.gr/routes/" target="_blank" rel="noopener">anendyk.gr</a></li><li>Voiture : réservation auprès d\'ANENDYK au moins 1 jour avant. Elle ne peut pas débarquer à Agia Roumeli : faire confirmer comment elle rejoint Chora Sfakion.</li><li>Le vent peut annuler une traversée.</li></ul></section>' +
     '<section class="card rise" style="animation-delay:.1s"><h3>🥾 Gorges de Samaria</h3><ul><li>Ouvertes du 1er mai au 31 octobre, entrée par le haut de 7h à 13h.</li><li>Billet ≈ 10 €, gratuit -18 ans et +65 ans.</li><li>Depuis Agia Roumeli, on peut remonter jusqu\'aux Portes de Fer sans faire toute la gorge.</li></ul></section>' +
     '<section class="card rise" style="animation-delay:.15s"><h3>🚗 Conduite</h3><ul><li>Sur la VOAK, les voitures lentes roulent sur la bande d\'arrêt d\'urgence pour laisser doubler : faites pareil.</li><li>Chèvres et pierres sur les routes de montagne, klaxon dans les virages sans visibilité.</li><li>Stations rares dans le sud-ouest et l\'extrême est : faire le plein dès que le réservoir est à moitié.</li><li>Pistes non goudronnées souvent exclues de l\'assurance location.</li><li>Alcool : taux limite bas (0,5 g/l), contrôles fréquents.</li></ul></section>' +
     '<section class="card rise" style="animation-delay:.2s"><h3>🏖️ Plage & soleil</h3><ul><li>Chaussures d\'eau (galets, oursins), crème, chapeau : peu d\'ombre dans le sud.</li><li>Mi-septembre : ≈ 27° le jour, mer ≈ 25°, coucher du soleil vers 19h20.</li><li>Courants possibles à Kommos et dans le chenal de Mochlos.</li></ul></section>' +
@@ -650,7 +706,7 @@ function initMiniMap() {
   }
   d.en.concat(d.sur).forEach(function (s) {
     if (!s.c) return;
-    L.circleMarker(s.c, { radius: 6, color: "#fff", weight: 2, fillColor: TAGS[s.t].c, fillOpacity: 1 }).addTo(m)
+    L.circleMarker(s.c, { radius: s.me ? 8 : 6, color: s.me ? "#E1A032" : "#fff", weight: s.me ? 3 : 2, fillColor: TAGS[s.t].c, fillOpacity: 1 }).addTo(m)
       .bindPopup("<b>" + esc(s.n) + "</b><br><a href='" + gmapsTo(s.c) + "' target='_blank' rel='noopener'>Itinéraire ↗</a>");
     pts.push(s.c);
   });
