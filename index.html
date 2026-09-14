@@ -171,7 +171,8 @@ var TAGS = {
   rando:   { l: "Rando",   c: "#667A35" },
   village: { l: "Village", c: "#B07A1F" },
   vue:     { l: "Vue",     c: "#8A5A83" },
-  bateau:  { l: "Bateau",  c: "#2F8AA3" }
+  bateau:  { l: "Bateau",  c: "#2F8AA3" },
+  depart:  { l: "Départ",  c: "#0E3A52" }
 };
 
 var P = {
@@ -183,7 +184,8 @@ var P = {
   tsoutsouros: [34.9844, 25.2811], viannos: [35.0530, 25.4140], sarakina: [35.0450, 25.6040], myrtos: [35.0050, 25.5820],
   ierapetra: [35.0070, 25.7370], makrygialos: [35.0397, 25.9744], ziros: [35.0700, 26.1300], xerokampos: [35.0480, 26.2330],
   zakros: [35.0980, 26.2610], palekastro: [35.1987, 26.2552], vai: [35.2540, 26.2640], toplou: [35.2210, 26.2150],
-  sitia: [35.2080, 26.1050], mochlos: [35.1845, 25.9036]
+  sitia: [35.2080, 26.1050], mochlos: [35.1845, 25.9036],
+  paleochora: [35.2330, 23.6820], sougia: [35.2475, 23.8120], lykos: [35.1990, 24.0600], anopolis: [35.2230, 24.0890]
 };
 
 var TRIP = [
@@ -221,61 +223,62 @@ var TRIP = [
     { n: "Kedrodasos", t: "rando", o: 1, c: [35.2800, 23.5600], x: "45 min", d: "Plage sauvage bordée de genévriers, par le sentier E4 depuis Elafonissi. Aucun ombre sur le chemin." }
   ],
   eat: "Peu de choix autour de la plage : tavernas vers Chrysoskalitissa. Prévoir pique-nique et beaucoup d'eau.",
-  tip: "Parking payant à la plage. Faire le plein à Kissamos / Kaloudiana : peu de stations dans le coin, et demain grosse journée de route."
+  tip: "Parking payant à la plage. Faire le plein à Kissamos / Kaloudiana. Demain réveil tôt : départ 7h pour le ferry de 8h30 à Palaiochora."
 },
 {
   date: "2026-09-18", night: "Agia Roumeli", from: "Elafonissi", c: P.roumeli, sea: [35.21, 23.96],
-  car: { o: P.elafonisi, d: P.sfakia, via: [P.topolia, P.vrysses, P.askyfou], oL: "Elafonissi", dL: "Chora Sfakion (parking)" },
-  drive: "≈ 160 km · 3h jusqu'à Chora Sfakion + 1h de ferry",
-  route: "Remonter par Topolia vers la côte nord, VOAK jusqu'à Vrysses, traversée du plateau d'Askyfou puis descente en lacets sur Sfakia. Viser le ferry de 13h00 (partir vers 9h) ou celui de 16h30 plus tranquille.",
-  alert: { h: "Pas de route jusqu'à Agia Roumeli", b: "Garer la voiture à Chora Sfakion (vous la récupérez dimanche en revenant de Loutro), puis ferry ANENDYK Chora Sfakion → Agia Roumeli, ≈ 1h via Loutro. Départs 2026 annoncés : 10h30, 13h00, 16h30. Billet ≈ 17 € l'aller, au guichet du port. À vérifier la veille sur anendyk.gr. Prendre un seul sac pour 2 nuits." },
+  car: { o: P.elafonisi, d: P.paleochora, via: [], oL: "Elafonissi", dL: "Port de Palaiochora" },
+  boat: [P.paleochora, P.sougia, P.roumeli],
+  drive: "≈ 45 km · 1h jusqu'à Palaiochora + ferry 1h40",
+  route: "Réveil tôt : partir vers 7h pour être au port avant 8h (embarquement voiture). Route par l'intérieur, étroite et sinueuse. Arrivée à Agia Roumeli à 10h10 : la journée entière sur place.",
+  alert: { h: "Ferry Palaiochora 8h30 → Agia Roumeli 10h10", b: "Bateau Daskalogiannis (ANENDYK), escale à Sougia. Voiture à réserver auprès d'ANENDYK au plus tard la veille. À faire confirmer : une voiture ne peut pas être débarquée à Agia Roumeli, demander comment elle voyage jusqu'à Chora Sfakion et où la récupérer le 19 à 12h40." },
   ferry: 1,
   en: [
-    { n: "Baignade matinale à Elafonissi", t: "plage", c: P.elafonisi, d: "Avant 9h la plage est presque vide : le meilleur moment de l'étape." },
-    { n: "Vrysses", t: "village", c: P.vrysses, d: "Pause sous les platanes au bord de la rivière, yaourt au miel réputé." },
-    { n: "Plateau d'Askyfou", t: "vue", c: P.askyfou, d: "Grand plateau cultivé à 700 m, ambiance montagne, vieux kafeneia." },
-    { n: "Gorges d'Imbros", t: "rando", o: 1, c: [35.2600, 24.1690], x: "2h30", d: "8 km de descente facile jusqu'à Komitades, taxi retour à la voiture. Seulement si vous visez le ferry de 16h30." },
-    { n: "Chora Sfakion", t: "village", c: P.sfakia, d: "Parkings au-dessus du port. Billets au guichet ANENDYK. Goûter la sfakiani pita (galette au fromage et miel)." }
+    { n: "Palaiochora", t: "village", c: P.paleochora, d: "Café et petit-déj au port avant l'embarquement." },
+    { n: "Escale à Sougia", t: "bateau", c: P.sougia, d: "Le ferry longe la côte sauvage du sud-ouest : rester sur le pont." }
   ],
   sur: [
     { n: "Agia Roumeli", t: "village", c: P.roumeli, d: "Village sans voiture au débouché des gorges de Samaria. Très calme le soir, quand les randonneurs sont repartis en bateau." },
+    { n: "Samaria à l'envers : les Portes de Fer", t: "rando", c: [35.2540, 23.9640], x: "2h30 AR", d: "Poser les sacs et remonter la gorge (≈ 3,5 km) jusqu'au passage le plus étroit : 3 m de large, 300 m de parois. Billet du parc ≈ 10 €, gratuit -18 ans. Partir dès l'arrivée, avant la grosse chaleur." },
     { n: "Plage de galets", t: "plage", c: [35.2300, 23.9550], d: "Grande plage, eau très claire et fraîche. Chaussures d'eau utiles." },
+    { n: "Chapelle Agios Pavlos", t: "rando", o: 1, c: [35.2230, 24.0000], x: "3h AR", d: "Chapelle byzantine sur la plage, par le sentier côtier vers l'est. Sources d'eau douce." },
     { n: "Forteresse turque", t: "vue", o: 1, c: [35.2365, 23.9575], x: "1h AR", d: "Montée raide au-dessus du village, vue sur la mer de Libye au coucher du soleil." }
   ],
   eat: "Tavernas simples face à la mer, poisson et plats du jour.",
-  tip: "Prévoir du liquide pour 2 jours : pas de distributeur fiable à Agia Roumeli ni à Loutro."
+  tip: "Prévoir du liquide : pas de distributeur fiable à Agia Roumeli."
 },
 {
-  date: "2026-09-19", night: "Loutro", from: "Agia Roumeli", c: P.loutro, sea: [35.19, 24.08],
-  car: null,
-  drive: "Pas de voiture aujourd'hui · ferry ≈ 45 min",
-  route: "Journée à pied et en bateau. Randonnée le matin pendant qu'il fait frais, ferry pour Loutro l'après-midi.",
-  alert: { h: "Ferry Agia Roumeli → Loutro", b: "Départs 2026 annoncés : 8h45, 11h30, 17h30 (à vérifier sur place). Le vent peut faire annuler des bateaux sur la côte sud : regarder les rafales dans la météo.", blue: 1 },
+  date: "2026-09-19", night: "Lykos", from: "Agia Roumeli", c: P.lykos, sea: [35.19, 24.06],
+  car: { o: P.sfakia, d: P.lykos, via: [P.anopolis], oL: "Chora Sfakion", dL: "Lykos (Akrogiali)" },
+  boat: [P.roumeli, P.loutro, P.sfakia],
+  drive: "Ferry 1h10 + ≈ 20 km · 45 min",
+  route: "Récupérer la voiture à Chora Sfakion, montée en lacets vers Anopolis puis descente vers Lykos. Demander à la Taverna Akrogiali l'état de la route et où se garer.",
+  alert: { h: "Ferry Agia Roumeli 11h30 → Chora Sfakion 12h40", b: "Bateau Daskalogiannis, escale à Loutro. Le vent peut perturber les traversées : regarder les rafales la veille.", blue: 1 },
   ferry: 1,
   en: [
-    { n: "Samaria à l'envers : les Portes de Fer", t: "rando", c: [35.2540, 23.9640], x: "2h30 AR", d: "Remonter la gorge depuis Agia Roumeli (≈ 3,5 km) jusqu'au passage le plus étroit : 3 m de large, 300 m de parois. Billet du parc ≈ 10 €, gratuit -18 ans. Partir tôt." },
-    { n: "Chapelle Agios Pavlos", t: "rando", o: 1, c: [35.2230, 24.0000], x: "1h30", d: "Chapelle byzantine sur la plage, par le sentier côtier vers l'est. Sources d'eau douce, plage superbe." },
-    { n: "Rando complète jusqu'à Loutro", t: "rando", o: 1, c: [35.1990, 24.0400], x: "5-6h", d: "Sentier E4 : Agios Pavlos, Marmara, Finix, Loutro. ≈ 14 km au soleil, passages rocheux. 3 L d'eau par personne, sac léger." }
+    { n: "Dernière baignade à Agia Roumeli", t: "plage", c: [35.2300, 23.9550], d: "Matinée tranquille avant le bateau de 11h30." },
+    { n: "Chora Sfakion", t: "village", c: P.sfakia, d: "Déjeuner sur le port en récupérant la voiture. Goûter la sfakiani pita (galette au fromage et miel)." },
+    { n: "Pont d'Aradena", t: "vue", c: [35.2240, 24.0610], x: "30 min", d: "Pont métallique au-dessus de la gorge d'Aradena, juste après Anopolis. Vue vertigineuse, saut à l'élastique possible." },
+    { n: "Anopolis", t: "village", c: P.anopolis, d: "Plateau de montagne au-dessus de la mer, village de bergers sfakiotes." }
   ],
   sur: [
-    { n: "Loutro", t: "village", c: P.loutro, d: "Baie en fer à cheval, maisons blanches aux volets bleus, zéro voiture. L'endroit parfait pour ne rien faire." },
-    { n: "Kayak ou paddle", t: "bateau", c: [35.1990, 24.0770], d: "Location sur la plage. Pagayer vers les criques voisines ou jusqu'à Finix." },
-    { n: "Finix (Phoenix)", t: "vue", c: [35.1980, 24.0680], x: "20 min", d: "Par la colline à l'ouest, ruines d'un fort vénitien. Joli coucher de soleil." },
-    { n: "Plage de Marmara", t: "plage", o: 1, c: [35.2000, 24.0400], d: "Criques de marbre au pied des gorges d'Aradena. Bateau-taxi depuis Loutro ou 1h15 à pied." }
+    { n: "Plage de Lykos", t: "plage", c: P.lykos, d: "Petite baie de galets entre Marmara et Finix, eau cristalline, quelques tavernas seulement." },
+    { n: "Finix (Phoenix)", t: "vue", c: [35.1980, 24.0680], x: "15 min", d: "Ancien port romain juste à l'est, chapelle blanche et coucher de soleil." },
+    { n: "Loutro à pied", t: "village", c: P.loutro, x: "40 min", d: "Par le sentier côtier via Finix : baie aux maisons blanches sans voiture. Un verre ou un dîner, retour avec une frontale." },
+    { n: "Plage de Marmara", t: "plage", o: 1, c: [35.2000, 24.0400], x: "30 min", d: "Criques de marbre au pied des gorges d'Aradena, à l'ouest par le sentier." }
   ],
-  eat: "Poisson grillé les pieds dans l'eau. Petit-déj yaourt-miel face à la baie.",
-  tip: "Réserver le logement de Loutro avec vue baie si possible : c'est la soirée carte postale du voyage."
+  eat: "Dîner à la Taverna Akrogiali, face à la mer.",
+  tip: "Emporter une lampe frontale si vous revenez de Loutro ou Marmara à la nuit."
 },
 {
-  date: "2026-09-20", night: "Rodakino", from: "Loutro", c: P.rodakino, sea: [35.18, 24.34],
-  car: { o: P.sfakia, d: P.rodakino, via: [P.frango], oL: "Chora Sfakion", dL: "Rodakino" },
-  drive: "Ferry 20 min + ≈ 30 km · 35 min",
-  route: "Récupérer la voiture à Sfakia, puis route côtière vers l'est par Frangokastello. Courte et facile.",
-  alert: { h: "Ferry Loutro → Chora Sfakion", b: "≈ 20 min, nombreux départs dans la journée (9h30, 11h30, 12h00, 15h30, 16h30, 17h30…). Pas besoin de réserver.", blue: 1 },
-  ferry: 1,
+  date: "2026-09-20", night: "Rodakino", from: "Lykos", c: P.rodakino, sea: [35.18, 24.34],
+  car: { o: P.lykos, d: P.rodakino, via: [P.anopolis, P.sfakia, P.frango], oL: "Lykos", dL: "Rodakino" },
+  drive: "≈ 50 km · 1h15",
+  route: "Remonter vers Anopolis, redescendre sur Chora Sfakion puis la côte vers l'est par Frangokastello.",
   en: [
-    { n: "Sweetwater (Glyka Nera)", t: "plage", c: [35.2020, 24.1080], x: "demi-journée", d: "Plage de galets où l'eau douce jaillit sous les cailloux. 1h à pied depuis Loutro ou bateau-taxi. Pas d'accès voiture." },
-    { n: "Pont d'Aradena & Anopolis", t: "vue", o: 1, c: [35.2240, 24.0610], x: "1h", d: "Depuis Sfakia, route en lacets vers le plateau d'Anopolis et le pont métallique au-dessus de la gorge. Vue vertigineuse." },
+    { n: "Baignade du matin à Lykos", t: "plage", c: P.lykos, d: "La baie est encore vide avant l'arrivée des randonneurs." },
+    { n: "Sweetwater (Glyka Nera)", t: "plage", o: 1, c: [35.2020, 24.1080], x: "demi-journée", d: "Plage de galets où l'eau douce jaillit sous les cailloux. Bateau-taxi depuis Chora Sfakion, pas d'accès voiture." },
+    { n: "Gorges d'Imbros", t: "rando", o: 1, c: [35.2600, 24.1690], x: "2h30", d: "8 km de descente facile jusqu'à Komitades (10 min de Sfakia), taxi pour remonter à Imbros." },
     { n: "Frangokastello", t: "site", c: P.frango, d: "Château vénitien carré au bord d'une plage de sable très peu profonde, parfaite pour se baigner." },
     { n: "Orthi Ammos", t: "plage", c: [35.1840, 24.2400], d: "Juste à côté du château : dune de sable blond, plus sauvage." }
   ],
@@ -381,6 +384,22 @@ var TRIP = [
   ],
   eat: "Dernier dîner en terrasse face à l'îlot, au coucher du soleil.",
   tip: "Préparer la route du lendemain : ≈ 1h45 jusqu'à l'aéroport d'Héraklion."
+},
+{
+  date: "2026-09-26", night: "Héraklion", last: 1, from: "Mochlos", c: P.her, sea: [35.36, 25.18],
+  car: { o: P.mochlos, d: P.her, via: [[35.1900, 25.7160]], oL: "Mochlos", dL: "Aéroport d'Héraklion" },
+  drive: "≈ 110 km · 1h45",
+  route: "Route côtière jusqu'à Pacheia Ammos, puis nationale nord par Agios Nikolaos jusqu'à Héraklion. Prévoir le temps de rendre la voiture et d'être à l'aéroport 2h avant le vol.",
+  en: [
+    { n: "Agios Nikolaos", t: "village", o: 1, c: [35.1900, 25.7160], d: "Petite ville autour du lac Voulismeni, café en passant." },
+    { n: "Spinalonga", t: "site", o: 1, c: [35.2970, 25.7380], x: "3h", d: "Île-forteresse, ancienne léproserie. Bateau depuis Plaka ou Elounda. Seulement si le vol est en fin de journée." },
+    { n: "Palais de Knossos", t: "site", o: 1, c: [35.2980, 25.1630], x: "1h30", d: "Le grand palais minoen, à 20 min de l'aéroport. Si le vol est le soir. Billet en ligne conseillé, beaucoup de monde." }
+  ],
+  sur: [
+    { n: "Aéroport d'Héraklion", t: "depart", c: P.her, d: "Rendre la voiture de location (vérifier la règle du plein dans le contrat), puis enregistrement." }
+  ],
+  eat: "Dernier petit-déj face à l'îlot de Mochlos, ou bougatsa à Héraklion si le vol est l'après-midi.",
+  tip: "Vol le soir ? Knossos est sur le chemin, à 20 min de l'aéroport."
 }
 ];
 
@@ -539,7 +558,7 @@ function viewDay() {
   var h = rail() +
     '<header class="hero"><div class="num">' + (st.i + 1) + '</div><div class="sun"></div>' +
     '<div class="kick">Jour ' + (st.i + 1) + ' · ' + fmtLong(d.date) + '</div>' +
-    '<h1>' + esc(d.night) + '</h1><div class="from">nuit ici · depuis ' + esc(d.from) + '</div>' + cd +
+    '<h1>' + esc(d.night) + '</h1><div class="from">' + (d.last ? "retour" : "nuit ici") + ' · depuis ' + esc(d.from) + '</div>' + cd +
     '<svg viewBox="0 0 400 46" preserveAspectRatio="none"><path d="M0 22 C60 4 120 40 200 22 S340 6 400 22 V46 H0Z" fill="#F3ECDF" opacity=".35"/><path d="M0 30 C70 16 130 44 210 30 S350 18 400 30 V46 H0Z" fill="#F3ECDF"/></svg>' +
     '</header>' +
     '<main class="wrap">' +
@@ -584,7 +603,7 @@ function viewMeteo() {
 function viewInfos() {
   return '<div class="ptitle"><h1>Pratique</h1><p>10 nuits, de Réthymnon à Mochlos</p></div><div class="greek"></div><main class="wrap info">' +
     '<section class="card rise"><h3>🚨 Urgences</h3><ul><li><b>112</b> : numéro d\'urgence européen (parle anglais)</li><li><b>1571</b> : police touristique</li><li>Pharmacies : croix verte, une de garde par secteur (affichée sur la porte)</li></ul></section>' +
-    '<section class="card rise" style="animation-delay:.05s"><h3>⛴️ Ferries côte sud (18 → 20 sept)</h3><ul><li>Compagnie ANENDYK : <a href="https://anendyk.gr/routes/" target="_blank" rel="noopener">anendyk.gr</a>. Billets au guichet du port.</li><li>Chora Sfakion → Agia Roumeli : 10h30, 13h00, 16h30 (≈ 1h)</li><li>Agia Roumeli → Loutro : 8h45, 11h30, 17h30 (≈ 45 min)</li><li>Loutro → Chora Sfakion : très nombreux départs (≈ 20 min)</li><li>Horaires 2026 annoncés, à reconfirmer sur place. Le vent peut annuler une traversée.</li></ul></section>' +
+    '<section class="card rise" style="animation-delay:.05s"><h3>⛴️ Ferries (18 et 19 sept)</h3><ul><li><b>Ven 18</b> : Palaiochora 8h30 → Agia Roumeli 10h10</li><li><b>Sam 19</b> : Agia Roumeli 11h30 → Chora Sfakion 12h40</li><li>Bateau Daskalogiannis, compagnie ANENDYK : <a href="https://anendyk.gr/routes/" target="_blank" rel="noopener">anendyk.gr</a></li><li>Voiture : réservation auprès d\'ANENDYK au moins 1 jour avant. Elle ne peut pas débarquer à Agia Roumeli : faire confirmer comment elle rejoint Chora Sfakion.</li><li>Le vent peut annuler une traversée.</li></ul></section>' +
     '<section class="card rise" style="animation-delay:.1s"><h3>🥾 Gorges de Samaria</h3><ul><li>Ouvertes du 1er mai au 31 octobre, entrée par le haut de 7h à 13h.</li><li>Billet ≈ 10 €, gratuit -18 ans et +65 ans.</li><li>Depuis Agia Roumeli, on peut remonter jusqu\'aux Portes de Fer sans faire toute la gorge.</li></ul></section>' +
     '<section class="card rise" style="animation-delay:.15s"><h3>🚗 Conduite</h3><ul><li>Sur la VOAK, les voitures lentes roulent sur la bande d\'arrêt d\'urgence pour laisser doubler : faites pareil.</li><li>Chèvres et pierres sur les routes de montagne, klaxon dans les virages sans visibilité.</li><li>Stations rares dans le sud-ouest et l\'extrême est : faire le plein dès que le réservoir est à moitié.</li><li>Pistes non goudronnées souvent exclues de l\'assurance location.</li><li>Alcool : taux limite bas (0,5 g/l), contrôles fréquents.</li></ul></section>' +
     '<section class="card rise" style="animation-delay:.2s"><h3>🏖️ Plage & soleil</h3><ul><li>Chaussures d\'eau (galets, oursins), crème, chapeau : peu d\'ombre dans le sud.</li><li>Mi-septembre : ≈ 27° le jour, mer ≈ 25°, coucher du soleil vers 19h20.</li><li>Courants possibles à Kommos et dans le chenal de Mochlos.</li></ul></section>' +
@@ -625,10 +644,9 @@ function initMiniMap() {
     L.polyline(line, { color: "#C4553A", weight: 3, dashArray: "6 7" }).addTo(m);
     pts = pts.concat(line);
   }
-  if (!d.car || d.date === "2026-09-18" || d.date === "2026-09-20") {
-    var sea = d.date === "2026-09-18" ? [P.sfakia, P.loutro, P.roumeli] : d.date === "2026-09-19" ? [P.roumeli, P.loutro] : [P.loutro, P.sfakia];
-    L.polyline(sea, { color: "#1B6A86", weight: 3, dashArray: "2 6" }).addTo(m);
-    pts = pts.concat(sea);
+  if (d.boat) {
+    L.polyline(d.boat, { color: "#1B6A86", weight: 3, dashArray: "2 6" }).addTo(m);
+    pts = pts.concat(d.boat);
   }
   d.en.concat(d.sur).forEach(function (s) {
     if (!s.c) return;
@@ -646,12 +664,10 @@ function initBigMap() {
   tiles(m); maps.push(m);
   L.control.zoom({ position: "bottomright" }).addTo(m);
   L.marker(P.her, { icon: pin("✈", "start") }).addTo(m).bindPopup("<b>Aéroport d'Héraklion</b>");
-  var legs = [[P.her, P.rethymno], [P.rethymno, P.chania, P.topolia, P.elafonisi], [P.elafonisi, P.topolia, P.vrysses, P.askyfou, P.sfakia],
-    null, null, [P.sfakia, P.frango, P.rodakino], [P.rodakino, P.plakias, P.preveli, P.spili, P.phaistos, P.matala],
-    [P.matala, P.gortyna, P.tsoutsouros], [P.tsoutsouros, P.viannos, P.myrtos, P.ierapetra, P.makrygialos],
-    [P.makrygialos, P.ziros, P.xerokampos, P.zakros, P.palekastro], [P.palekastro, P.vai, P.toplou, P.sitia, P.mochlos]];
-  legs.forEach(function (l) { if (l) L.polyline(l, { color: "#C4553A", weight: 3, opacity: .85, dashArray: "7 7" }).addTo(m); });
-  L.polyline([P.sfakia, P.loutro, P.roumeli], { color: "#1B6A86", weight: 3, dashArray: "2 6" }).addTo(m);
+  TRIP.forEach(function (d) {
+    if (d.car) L.polyline([d.car.o].concat(d.car.via, [d.car.d]), { color: "#C4553A", weight: 3, opacity: .85, dashArray: "7 7" }).addTo(m);
+  });
+  L.polyline([P.paleochora, P.sougia, P.roumeli, P.loutro, P.sfakia], { color: "#1B6A86", weight: 3, dashArray: "2 6" }).addTo(m);
   TRIP.forEach(function (d, i) {
     L.marker(d.c, { icon: pin(i + 1, i === st.i ? "on" : "") }).addTo(m)
       .bindPopup("<b>" + (i + 1) + ". " + esc(d.night) + "</b><br>" + fmtLong(d.date) + "<br><a class='pbtn' href='#' data-goday='" + i + "'>Voir le jour</a>");
