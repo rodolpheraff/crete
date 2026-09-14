@@ -477,31 +477,6 @@ function gmapsDir(car) {
   return u;
 }
 function gmapsTo(c) { return "https://www.google.com/maps/dir/?api=1&destination=" + ll(c); }
-function claudeCtx(i) {
-  var d = TRIP[i], nx = TRIP[i + 1], w = WX && WX.days[d.date], out = [];
-  out.push("Contexte : road trip en Crète, en couple, du " + fmtLong(TRIP[0].date) + " au " + fmtLong(TRIP[TRIP.length - 1].date) + ".");
-  out.push("Jour " + (i + 1) + "/" + TRIP.length + " · " + fmtLong(d.date));
-  out.push("Nuit : " + d.night + (d.hotel ? " (" + d.hotel.n + ")" : "") + " · depuis " + d.from);
-  out.push("Trajet : " + d.drive + " · " + d.route);
-  if (d.alert) out.push("Alerte : " + d.alert.h + " " + d.alert.b);
-  if (w) out.push("Météo : " + Math.round(w.max) + "° / " + Math.round(w.min) + "°" +
-    (w.rain != null ? ", pluie " + w.rain + "%" : "") +
-    ", vent " + card8(w.dir) + " " + Math.round(w.wind) + " km/h, rafales " + Math.round(w.gust) + " km/h" +
-    (w.sst != null ? ", mer " + Math.round(w.sst) + "°" : "") +
-    (w.wave != null ? ", vagues " + w.wave.toFixed(1) + " m" : ""));
-  if (d.en.length) out.push("En chemin : " + d.en.map(function (s) { return s.n; }).join(", "));
-  if (d.sur.length) out.push("Sur place : " + d.sur.map(function (s) { return s.n; }).join(", "));
-  if (notes[d.date]) out.push("Nos notes : " + notes[d.date]);
-  if (nx) out.push("Lendemain : " + nx.night + " (" + nx.drive + ")");
-  return out.join("\n");
-}
-function askClaude(i) {
-  var q = prompt("Ta question à Claude sur cette étape :");
-  if (q == null) return;
-  var txt = (q.trim() ? q.trim() + "\n\n" : "") + claudeCtx(i);
-  try { navigator.clipboard.writeText(txt).catch(function () {}); } catch (e) {}
-  window.open("https://claude.ai/new?q=" + encodeURIComponent(txt), "_blank", "noopener");
-}
 
 var WMO = function (c) {
   if (c === 0) return ["☀️", "Grand soleil"];
@@ -650,8 +625,7 @@ function viewDay() {
     (d.car ? '<div class="rt"><span>' + esc(d.car.oL) + '</span><i></i><span>' + esc(d.car.dL) + '</span></div>' : '') +
     '<div class="big">' + esc(d.drive) + '</div><div class="muted">' + esc(d.route) + '</div>' +
     '<div class="btns">' + (d.gm ? d.gm.map(function (g) { return '<a class="btn" href="' + g.u + '" target="_blank" rel="noopener">🧭 ' + esc(g.l) + '</a>'; }).join('') : (d.car ? '<a class="btn" href="' + gmapsDir(d.car) + '" target="_blank" rel="noopener">🧭 Lancer le GPS</a>' : '')) +
-    '<a class="btn ghost" href="' + gmapsTo(d.c) + '" target="_blank" rel="noopener">📍 ' + esc(d.hotel ? d.hotel.n : d.night) + '</a>' +
-    '<button class="btn ghost" data-ask="' + st.i + '">💬 Demander à Claude</button></div>' +
+    '<a class="btn ghost" href="' + gmapsTo(d.c) + '" target="_blank" rel="noopener">📍 ' + esc(d.hotel ? d.hotel.n : d.night) + '</a></div>' +
     '<p class="small muted" style="margin:10px 0 0">' + (d.gm ? 'Vos trajets Google Maps, avec vos arrêts. ' : '') + 'Sur les routes de montagne, compter +20 % sur le GPS.</p></section>' +
     '<section class="card rise" style="animation-delay:.1s"><h2>En chemin <em>à cocher une fois vu</em></h2>' + stopList(d.en, d, "e") + '</section>' +
     '<section class="card rise" style="animation-delay:.15s"><h2>Sur place <em>' + esc(d.night) + '</em></h2>' + stopList(d.sur, d, "s") + '</section>' +
@@ -779,7 +753,7 @@ function goDay(i) {
 }
 
 document.addEventListener("click", function (e) {
-  var t = e.target.closest("[data-day],[data-goday],[data-tab],[data-vu],[data-ask],#refresh,#resetvu");
+  var t = e.target.closest("[data-day],[data-goday],[data-tab],[data-vu],#refresh,#resetvu");
   if (!t) return;
   if (t.dataset.vu) {
     var id = t.dataset.vu;
@@ -788,7 +762,6 @@ document.addEventListener("click", function (e) {
     t.parentNode.classList.toggle("done", !!vu[id]);
     return;
   }
-  if (t.dataset.ask != null) { askClaude(+t.dataset.ask); return; }
   if (t.dataset.day != null) { goDay(+t.dataset.day); return; }
   if (t.dataset.goday != null) { e.preventDefault(); goDay(+t.dataset.goday); return; }
   if (t.dataset.tab) { st.tab = t.dataset.tab; LS.set("crete-tab", st.tab); render(); window.scrollTo(0, 0); return; }
