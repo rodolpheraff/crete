@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E3A52">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Crète">
+<title>Crète en voiture</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,650;1,9..144,400;1,9..144,500&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{
+  --paper:#F3ECDF; --card:#FBF8F2; --line:#E3D7C3; --ink:#132F43; --ink2:#55666F;
+  --sea:#1B6A86; --deep:#0E3A52; --terra:#C4553A; --olive:#667A35; --sun:#E1A032;
+  --shadow:0 1px 0 rgba(19,47,67,.04),0 10px 26px -14px rgba(19,47,67,.25);
+  --disp:"Fraunces",Georgia,serif; --body:"Figtree",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+body{padding-bottom:calc(74px + env(safe-area-inset-bottom));min-height:100vh}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .38 0 0 0 0 .28 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+#app{position:relative;z-index:1}
+button{font:inherit;color:inherit}
+a{color:var(--sea)}
+
+/* rail des jours */
+.rail{position:sticky;top:0;z-index:30;display:flex;gap:8px;overflow-x:auto;padding:calc(10px + env(safe-area-inset-top)) 14px 10px;
+  background:rgba(243,236,223,.93);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line);scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.chip{flex:none;position:relative;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:6px 11px 7px;text-align:left;cursor:pointer;min-width:78px;transition:transform .15s}
+.chip:active{transform:scale(.96)}
+.chip b{display:block;font:650 19px/1 var(--disp)}
+.chip span{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+.chip small{display:block;font-size:11.5px;color:var(--ink2);white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis}
+.chip.on{background:var(--deep);border-color:var(--deep);color:#F6EFE3}
+.chip.on span,.chip.on small{color:#A9C9D6}
+.chip.today::after{content:"";position:absolute;top:6px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--terra)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;color:#F6EFE3;padding:22px 20px 70px;
+  background:radial-gradient(120% 90% at 100% 0%,#2F8AA3 0%,transparent 55%),linear-gradient(165deg,#0B2F44 0%,#0E3A52 45%,#1B6A86 100%)}
+.hero .num{position:absolute;right:-4px;top:-34px;font:650 190px/1 var(--disp);opacity:.08;letter-spacing:-.05em}
+.hero .kick{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+.hero h1{font:650 clamp(40px,12vw,64px)/.95 var(--disp);margin:8px 0 6px;letter-spacing:-.025em}
+.hero .from{font:italic 400 17px var(--disp);opacity:.9}
+.hero .sun{position:absolute;right:26px;top:74px;width:54px;height:54px;border-radius:50%;background:radial-gradient(circle at 40% 40%,#F3C46A,#E1A032 70%);box-shadow:0 0 40px 8px rgba(225,160,50,.35);opacity:.9}
+.hero svg{position:absolute;left:0;bottom:-1px;width:100%;height:46px}
+.countdown{display:inline-block;margin-top:12px;background:rgba(246,239,227,.14);border:1px solid rgba(246,239,227,.25);border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600}
+
+.wrap{max-width:720px;margin:0 auto;padding:0 14px}
+.lift{margin-top:-54px;position:relative}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:14px 0;box-shadow:var(--shadow)}
+.card h2{font:650 21px/1.1 var(--disp);margin:0 0 12px;display:flex;align-items:baseline;gap:10px}
+.card h2 em{font:italic 400 14px var(--disp);color:var(--ink2)}
+.rise{animation:rise .55s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* meteo */
+.wx{display:grid;grid-template-columns:auto 1fr auto;gap:2px 14px;align-items:center}
+.wx .ico{font-size:46px;line-height:1}
+.wx .t{font:650 34px/1 var(--disp)}
+.wx .t small{font:500 17px var(--body);color:var(--ink2)}
+.wx .lbl{color:var(--ink2);font-size:13.5px}
+.wx .where{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--ink2);text-align:right}
+.stats{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.stat{background:var(--paper);border-radius:11px;padding:7px 8px;font-size:11.5px;color:var(--ink2);line-height:1.25}
+.stat b{display:block;color:var(--ink);font-size:15px;margin-top:2px}
+.muted{color:var(--ink2)}
+.small{font-size:12.5px}
+
+.alert{display:flex;gap:10px;border-radius:14px;padding:12px 14px;margin:14px 0;background:#F6E1D8;border:1px solid #EBC3B3;color:#6E2A1A;font-size:14px}
+.alert.blue{background:#DCEBEF;border-color:#B8D5DE;color:#0E3A52}
+.alert b{display:block;margin-bottom:2px}
+
+/* route */
+.rt{display:flex;align-items:center;gap:10px;font-weight:600}
+.rt i{flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--terra) 0 8px,transparent 8px 14px);position:relative}
+.rt i::after{content:"🚗";position:absolute;left:50%;top:-13px;transform:translateX(-50%) scaleX(-1);font-style:normal;font-size:17px}
+.big{font:650 24px/1.15 var(--disp);margin:10px 0 6px}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--terra);color:#fff;border:0;border-radius:999px;padding:11px 17px;font:600 14px var(--body);text-decoration:none;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--deep);border:1px solid var(--line)}
+
+/* timeline */
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl::before{content:"";position:absolute;left:13px;top:10px;bottom:14px;width:2px;background:repeating-linear-gradient(var(--line) 0 6px,transparent 6px 11px)}
+.stop{position:relative;padding:2px 0 16px 42px}
+.stop:last-child{padding-bottom:2px}
+.dot{position:absolute;left:2px;top:1px;width:24px;height:24px;border-radius:50%;border:2px solid var(--c);background:var(--card);display:grid;place-items:center;cursor:pointer;padding:0}
+.dot svg{width:13px;height:13px;opacity:0}
+.stop.done .dot{background:var(--c)}
+.stop.done .dot svg{opacity:1}
+.stop.done .nm,.stop.done .desc{opacity:.5}
+.nm{font-weight:700;font-size:15.5px;line-height:1.3}
+.tag{font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:700;color:var(--c);white-space:nowrap}
+.opt{font-size:10px;text-transform:uppercase;letter-spacing:.08em;border:1px dashed #9AA6AC;border-radius:6px;padding:0 5px;color:var(--ink2);white-space:nowrap}
+.desc{color:var(--ink2);margin:3px 0 4px;font-size:14px}
+.meta{display:flex;gap:14px;align-items:center;font-size:12.5px;color:var(--ink2)}
+.meta a{font-weight:600;text-decoration:none}
+
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.duo .card{margin:0}
+.mini h3{font:650 16px var(--disp);margin:0 0 4px}
+.mini p{margin:0;font-size:14px;color:var(--ink2)}
+
+.mmap{height:240px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#DCEBEF}
+textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:12px;background:var(--paper);padding:10px 12px;font:16px/1.4 var(--body);color:var(--ink);resize:vertical}
+
+/* carte plein ecran */
+.fullmap{position:fixed;left:0;right:0;top:0;bottom:calc(64px + env(safe-area-inset-bottom));z-index:5}
+.maplegend{position:fixed;z-index:500;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top));background:rgba(251,248,242,.95);border:1px solid var(--line);border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);font-size:13px}
+.maplegend b{font:650 17px var(--disp)}
+.pin{display:grid;place-items:center;width:30px;height:30px;border-radius:50% 50% 50% 4px;transform:rotate(-45deg);background:var(--deep);border:2px solid #F6EFE3;box-shadow:0 3px 8px rgba(0,0,0,.3)}
+.pin span{transform:rotate(45deg);color:#F6EFE3;font:700 13px var(--body)}
+.pin.on{background:var(--terra)}
+.pin.start{background:var(--sun)}
+.leaflet-popup-content{font:14px/1.4 var(--body);margin:10px 14px}
+.leaflet-popup-content b{font:650 16px var(--disp)}
+.leaflet-container a.pbtn{display:inline-block;margin-top:6px;color:#fff;background:var(--terra);padding:5px 11px;border-radius:999px;text-decoration:none;font-weight:600}
+
+/* page titre (meteo / infos) */
+.ptitle{padding:calc(26px + env(safe-area-inset-top)) 20px 8px}
+.ptitle h1{font:650 40px/1 var(--disp);margin:0;letter-spacing:-.02em}
+.ptitle p{margin:6px 0 0;color:var(--ink2)}
+.greek{height:12px;margin:14px 20px 0;opacity:.55;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cpath d='M0 11h6V3h12v6h-6V6H9v5h15' fill='none' stroke='%231B6A86' stroke-width='1.6'/%3E%3C/svg%3E") repeat-x}
+
+.wrow{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:12px 4px;border-bottom:1px dashed var(--line);cursor:pointer}
+.wrow:last-child{border-bottom:0}
+.wrow .d{font:650 22px/1 var(--disp);text-align:center}
+.wrow .d span{display:block;font:600 10px var(--body);text-transform:uppercase;letter-spacing:.1em;color:var(--ink2);margin-top:3px}
+.wrow .n{font-weight:700}
+.wrow .s{font-size:12.5px;color:var(--ink2)}
+.wrow .r{text-align:right}
+.wrow .r b{font:650 20px var(--disp)}
+.flag{display:inline-block;margin-top:3px;font-size:11.5px;font-weight:700;color:var(--terra)}
+
+.info h3{font:650 17px var(--disp);margin:0 0 6px}
+.info ul{margin:0;padding-left:18px}
+.info li{margin:4px 0}
+
+/* nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:1000;display:grid;grid-template-columns:repeat(4,1fr);background:var(--deep);padding:6px 6px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px -12px rgba(0,0,0,.35)}
+.nav button{background:none;border:0;color:#8FB2C2;font:600 11px var(--body);display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;cursor:pointer}
+.nav svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nav button.on{color:#F6EFE3}
+.nav button.on svg{stroke:var(--sun)}
+
+@media (min-width:640px){.hero{padding:30px 32px 76px}}
+@media (max-width:380px){.stats{grid-template-columns:repeat(2,1fr)}.duo{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<nav class="nav" id="nav"></nav>
+
+<script>
+/* ============ DONNEES DU VOYAGE ============ */
+var TAGS = {
+  plage:   { l: "Plage",   c: "#1B6A86" },
+  site:    { l: "Site",    c: "#C4553A" },
+  rando:   { l: "Rando",   c: "#667A35" },
+  village: { l: "Village", c: "#B07A1F" },
+  vue:     { l: "Vue",     c: "#8A5A83" },
+  bateau:  { l: "Bateau",  c: "#2F8AA3" }
+};
+
+var P = {
+  her: [35.3397, 25.1803], rethymno: [35.3693, 24.4737], chania: [35.5175, 24.0170], topolia: [35.4130, 23.6850],
+  elos: [35.3625, 23.6400], chryso: [35.3100, 23.5250], elafonisi: [35.2717, 23.5410], vrysses: [35.3702, 24.1988],
+  askyfou: [35.2930, 24.1850], sfakia: [35.2012, 24.1370], roumeli: [35.2317, 23.9597], loutro: [35.1998, 24.0786],
+  frango: [35.1817, 24.2336], rodakino: [35.1960, 24.3430], plakias: [35.1910, 24.3940], preveli: [35.1545, 24.4740],
+  spili: [35.2180, 24.5360], phaistos: [35.0510, 24.8140], matala: [34.9936, 24.7496], gortyna: [35.0620, 24.9470],
+  tsoutsouros: [34.9844, 25.2811], viannos: [35.0530, 25.4140], sarakina: [35.0450, 25.6040], myrtos: [35.0050, 25.5820],
+  ierapetra: [35.0070, 25.7370], makrygialos: [35.0397, 25.9744], ziros: [35.0700, 26.1300], xerokampos: [35.0480, 26.2330],
+  zakros: [35.0980, 26.2610], palekastro: [35.1987, 26.2552], vai: [35.2540, 26.2640], toplou: [35.2210, 26.2150],
+  sitia: [35.2080, 26.1050], mochlos: [35.1845, 25.9036]
+};
+
+var TRIP = [
+{
+  date: "2026-09-16", night: "Réthymnon", from: "l'aéroport", c: P.rethymno, sea: [35.39, 24.47],
+  car: { o: P.her, d: P.rethymno, via: [], oL: "Aéroport", dL: "Réthymnon" },
+  drive: "≈ 80 km · 1h10",
+  route: "Depuis Héraklion : route nationale nord (VOAK), simple et rapide. Depuis La Canée c'est pareil, ≈ 75 km · 1h10.",
+  en: [
+    { n: "Monastère d'Arkadi", t: "site", o: 1, c: [35.3095, 24.6290], x: "1h", d: "Symbole de la résistance crétoise (1866). Petit détour de 25 min depuis la VOAK si vous arrivez par Héraklion et qu'il reste du temps." }
+  ],
+  sur: [
+    { n: "Vieille ville vénitienne", t: "village", c: [35.3688, 24.4745], d: "Ruelles à arcades, fontaine Rimondi, mosquée Neratze et son minaret. Tout se fait à pied." },
+    { n: "Port vénitien & phare", t: "vue", c: [35.3702, 24.4790], d: "Tavernas sur le quai (un peu touristiques), balade jusqu'au phare au coucher du soleil." },
+    { n: "Fortezza", t: "site", c: [35.3730, 24.4720], d: "Forteresse du XVIe au-dessus de la ville, vue sur les toits et la mer. Fermeture en fin d'après-midi : à vérifier sur place." },
+    { n: "Plage de la ville", t: "plage", c: [35.3655, 24.4840], d: "Longue plage de sable juste à l'est du port, pratique pour une première baignade." }
+  ],
+  eat: "Kalitsounia (chaussons au fromage frais) et raki offert en fin de repas : c'est la tradition.",
+  tip: "Retirer du liquide dès ce soir (villages du sud-ouest sans distributeur) et acheter une glacière souple + chaussures d'eau."
+},
+{
+  date: "2026-09-17", night: "Elafonissi", from: "Réthymnon", c: P.elafonisi, sea: [35.25, 23.53],
+  car: { o: P.rethymno, d: P.elafonisi, via: [P.chania, P.topolia, P.elos], oL: "Réthymnon", dL: "Elafonissi" },
+  drive: "≈ 150 km · 2h50 sans les arrêts",
+  route: "VOAK jusqu'à La Canée, direction Kissamos, sortie Kaloudiana puis descente plein sud par les gorges de Topolia. Après Topolia : route de montagne étroite et sinueuse, klaxon dans les virages sans visibilité.",
+  en: [
+    { n: "La Canée (Chania), port vénitien", t: "village", c: P.chania, x: "1h30", d: "Pile sur la route, à 1h de Réthymnon. Café sur le port, phare, quartier Splantzia. Bougatsa chaude au petit-déj : la spécialité de la ville." },
+    { n: "Gorges de Topolia & grotte Agia Sofia", t: "vue", c: P.topolia, x: "30 min", d: "La route passe dans la gorge. Petit escalier vers une grotte-chapelle avec vue plongeante." },
+    { n: "Elos", t: "village", c: P.elos, d: "Village des châtaigniers, platanes et fontaines. Bonne pause déjeuner à l'ombre." },
+    { n: "Monastère Chrysoskalitissa", t: "site", c: P.chryso, d: "Monastère blanc perché sur un rocher face à la mer, 10 min avant Elafonissi." }
+  ],
+  sur: [
+    { n: "Plage d'Elafonissi", t: "plage", c: P.elafonisi, d: "Lagune turquoise, sable rosé, eau peu profonde. Idéal en fin d'après-midi quand les cars repartent, et au lever du jour. Réserve Natura 2000 : ne rien ramasser." },
+    { n: "Traversée vers l'îlot", t: "plage", c: [35.2685, 23.5355], d: "On traverse la lagune à pied, de l'eau jusqu'aux genoux : dunes, criques plus calmes et vue sur le coucher du soleil." },
+    { n: "Kedrodasos", t: "rando", o: 1, c: [35.2800, 23.5600], x: "45 min", d: "Plage sauvage bordée de genévriers, par le sentier E4 depuis Elafonissi. Aucun ombre sur le chemin." }
+  ],
+  eat: "Peu de choix autour de la plage : tavernas vers Chrysoskalitissa. Prévoir pique-nique et beaucoup d'eau.",
+  tip: "Parking payant à la plage. Faire le plein à Kissamos / Kaloudiana : peu de stations dans le coin, et demain grosse journée de route."
+},
+{
+  date: "2026-09-18", night: "Agia Roumeli", from: "Elafonissi", c: P.roumeli, sea: [35.21, 23.96],
+  car: { o: P.elafonisi, d: P.sfakia, via: [P.topolia, P.vrysses, P.askyfou], oL: "Elafonissi", dL: "Chora Sfakion (parking)" },
+  drive: "≈ 160 km · 3h jusqu'à Chora Sfakion + 1h de ferry",
+  route: "Remonter par Topolia vers la côte nord, VOAK jusqu'à Vrysses, traversée du plateau d'Askyfou puis descente en lacets sur Sfakia. Viser le ferry de 13h00 (partir vers 9h) ou celui de 16h30 plus tranquille.",
+  alert: { h: "Pas de route jusqu'à Agia Roumeli", b: "Garer la voiture à Chora Sfakion (vous la récupérez dimanche en revenant de Loutro), puis ferry ANENDYK Chora Sfakion → Agia Roumeli, ≈ 1h via Loutro. Départs 2026 annoncés : 10h30, 13h00, 16h30. Billet ≈ 17 € l'aller, au guichet du port. À vérifier la veille sur anendyk.gr. Prendre un seul sac pour 2 nuits." },
+  ferry: 1,
+  en: [
+    { n: "Baignade matinale à Elafonissi", t: "plage", c: P.elafonisi, d: "Avant 9h la plage est presque vide : le meilleur moment de l'étape." },
+    { n: "Vrysses", t: "village", c: P.vrysses, d: "Pause sous les platanes au bord de la rivière, yaourt au miel réputé." },
+    { n: "Plateau d'Askyfou", t: "vue", c: P.askyfou, d: "Grand plateau cultivé à 700 m, ambiance montagne, vieux kafeneia." },
+    { n: "Gorges d'Imbros", t: "rando", o: 1, c: [35.2600, 24.1690], x: "2h30", d: "8 km de descente facile jusqu'à Komitades, taxi retour à la voiture. Seulement si vous visez le ferry de 16h30." },
+    { n: "Chora Sfakion", t: "village", c: P.sfakia, d: "Parkings au-dessus du port. Billets au guichet ANENDYK. Goûter la sfakiani pita (galette au fromage et miel)." }
+  ],
+  sur: [
+    { n: "Agia Roumeli", t: "village", c: P.roumeli, d: "Village sans voiture au débouché des gorges de Samaria. Très calme le soir, quand les randonneurs sont repartis en bateau." },
+    { n: "Plage de galets", t: "plage", c: [35.2300, 23.9550], d: "Grande plage, eau très claire et fraîche. Chaussures d'eau utiles." },
+    { n: "Forteresse turque", t: "vue", o: 1, c: [35.2365, 23.9575], x: "1h AR", d: "Montée raide au-dessus du village, vue sur la mer de Libye au coucher du soleil." }
+  ],
+  eat: "Tavernas simples face à la mer, poisson et plats du jour.",
+  tip: "Prévoir du liquide pour 2 jours : pas de distributeur fiable à Agia Roumeli ni à Loutro."
+},
+{
+  date: "2026-09-19", night: "Loutro", from: "Agia Roumeli", c: P.loutro, sea: [35.19, 24.08],
+  car: null,
+  drive: "Pas de voiture aujourd'hui · ferry ≈ 45 min",
+  route: "Journée à pied et en bateau. Randonnée le matin pendant qu'il fait frais, ferry pour Loutro l'après-midi.",
+  alert: { h: "Ferry Agia Roumeli → Loutro", b: "Départs 2026 annoncés : 8h45, 11h30, 17h30 (à vérifier sur place). Le vent peut faire annuler des bateaux sur la côte sud : regarder les rafales dans la météo.", blue: 1 },
+  ferry: 1,
+  en: [
+    { n: "Samaria à l'envers : les Portes de Fer", t: "rando", c: [35.2540, 23.9640], x: "2h30 AR", d: "Remonter la gorge depuis Agia Roumeli (≈ 3,5 km) jusqu'au passage le plus étroit : 3 m de large, 300 m de parois. Billet du parc ≈ 10 €, gratuit -18 ans. Partir tôt." },
+    { n: "Chapelle Agios Pavlos", t: "rando", o: 1, c: [35.2230, 24.0000], x: "1h30", d: "Chapelle byzantine sur la plage, par le sentier côtier vers l'est. Sources d'eau douce, plage superbe." },
+    { n: "Rando complète jusqu'à Loutro", t: "rando", o: 1, c: [35.1990, 24.0400], x: "5-6h", d: "Sentier E4 : Agios Pavlos, Marmara, Finix, Loutro. ≈ 14 km au soleil, passages rocheux. 3 L d'eau par personne, sac léger." }
+  ],
+  sur: [
+    { n: "Loutro", t: "village", c: P.loutro, d: "Baie en fer à cheval, maisons blanches aux volets bleus, zéro voiture. L'endroit parfait pour ne rien faire." },
+    { n: "Kayak ou paddle", t: "bateau", c: [35.1990, 24.0770], d: "Location sur la plage. Pagayer vers les criques voisines ou jusqu'à Finix." },
+    { n: "Finix (Phoenix)", t: "vue", c: [35.1980, 24.0680], x: "20 min", d: "Par la colline à l'ouest, ruines d'un fort vénitien. Joli coucher de soleil." },
+    { n: "Plage de Marmara", t: "plage", o: 1, c: [35.2000, 24.0400], d: "Criques de marbre au pied des gorges d'Aradena. Bateau-taxi depuis Loutro ou 1h15 à pied." }
+  ],
+  eat: "Poisson grillé les pieds dans l'eau. Petit-déj yaourt-miel face à la baie.",
+  tip: "Réserver le logement de Loutro avec vue baie si possible : c'est la soirée carte postale du voyage."
+},
+{
+  date: "2026-09-20", night: "Rodakino", from: "Loutro", c: P.rodakino, sea: [35.18, 24.34],
+  car: { o: P.sfakia, d: P.rodakino, via: [P.frango], oL: "Chora Sfakion", dL: "Rodakino" },
+  drive: "Ferry 20 min + ≈ 30 km · 35 min",
+  route: "Récupérer la voiture à Sfakia, puis route côtière vers l'est par Frangokastello. Courte et facile.",
+  alert: { h: "Ferry Loutro → Chora Sfakion", b: "≈ 20 min, nombreux départs dans la journée (9h30, 11h30, 12h00, 15h30, 16h30, 17h30…). Pas besoin de réserver.", blue: 1 },
+  ferry: 1,
+  en: [
+    { n: "Sweetwater (Glyka Nera)", t: "plage", c: [35.2020, 24.1080], x: "demi-journée", d: "Plage de galets où l'eau douce jaillit sous les cailloux. 1h à pied depuis Loutro ou bateau-taxi. Pas d'accès voiture." },
+    { n: "Pont d'Aradena & Anopolis", t: "vue", o: 1, c: [35.2240, 24.0610], x: "1h", d: "Depuis Sfakia, route en lacets vers le plateau d'Anopolis et le pont métallique au-dessus de la gorge. Vue vertigineuse." },
+    { n: "Frangokastello", t: "site", c: P.frango, d: "Château vénitien carré au bord d'une plage de sable très peu profonde, parfaite pour se baigner." },
+    { n: "Orthi Ammos", t: "plage", c: [35.1840, 24.2400], d: "Juste à côté du château : dune de sable blond, plus sauvage." }
+  ],
+  sur: [
+    { n: "Rodakino", t: "village", c: P.rodakino, d: "Deux villages accrochés à la montagne au-dessus d'une côte de petites plages peu fréquentées." },
+    { n: "Plages de Polyrizos & Koraka", t: "plage", c: [35.1925, 24.3560], d: "Sable et rochers, bon snorkeling, coucher de soleil." }
+  ],
+  eat: "Tavernas familiales, ambiance très locale.",
+  tip: "Faire le plein à Sfakia ou Frangokastello : demain longue étape."
+},
+{
+  date: "2026-09-21", night: "Matala", from: "Rodakino", c: P.matala, sea: [34.99, 24.73],
+  car: { o: P.rodakino, d: P.matala, via: [P.plakias, [35.1560, 24.4650], P.spili, P.phaistos], oL: "Rodakino", dL: "Matala" },
+  drive: "≈ 120 km · 2h30 sans les arrêts",
+  route: "Côte sud par Plakias, Preveli, remontée vers Spili puis descente sur Agia Galini et la plaine de la Messara. Journée chargée : partir tôt pour faire Preveli au frais.",
+  en: [
+    { n: "Plakias", t: "village", c: P.plakias, d: "Station tranquille avec grande plage. Café en passant." },
+    { n: "Plage de Preveli", t: "plage", c: P.preveli, x: "2-3h", d: "Palmeraie le long d'une rivière qui se jette dans la mer. Parking payant sur la route du monastère, sentier raide ≈ 20 min, remontée en plein soleil : y aller le matin." },
+    { n: "Monastère de Preveli", t: "site", c: [35.1530, 24.4590], d: "Au-dessus de la mer, rôle clé pendant la Seconde Guerre mondiale. Épaules et genoux couverts." },
+    { n: "Spili", t: "village", c: P.spili, d: "Fontaine vénitienne aux lions qui crachent l'eau de source. Pause déjeuner." },
+    { n: "Palais de Phaistos", t: "site", c: P.phaistos, x: "1h30", d: "Palais minoen sur une colline face au Psiloritis. Moins de monde qu'à Knossos, cadre plus beau. Horaires à vérifier (fermeture fin d'après-midi)." }
+  ],
+  sur: [
+    { n: "Grottes de Matala", t: "site", c: [34.9930, 24.7480], d: "Tombes romaines creusées dans la falaise, rendues célèbres par les hippies des années 60. Entrée payante, fermées le soir." },
+    { n: "Red Beach (Kokkini Ammos)", t: "rando", c: [34.9880, 24.7530], x: "30 min", d: "Plage de sable rouge derrière la colline, sentier caillouteux. Chaussures fermées et eau." },
+    { n: "Coucher de soleil sur la baie", t: "vue", c: [34.9945, 24.7505], d: "Depuis les terrasses au-dessus de la plage, face aux grottes." }
+  ],
+  eat: "Rue principale animée le soir, ambiance bohème.",
+  tip: "Preveli : le parking du bas se remplit vite, arriver avant 10h."
+},
+{
+  date: "2026-09-22", night: "Tsoutsouros", from: "Matala", c: P.tsoutsouros, sea: [34.97, 25.28],
+  car: { o: P.matala, d: P.tsoutsouros, via: [P.gortyna], oL: "Matala", dL: "Tsoutsouros" },
+  drive: "≈ 85 km · 1h45",
+  route: "Traversée de la plaine de la Messara vers l'est (oliviers, serres), puis descente en lacets vers la côte. Dernière partie étroite.",
+  en: [
+    { n: "Plage de Kommos", t: "plage", c: [35.0110, 24.7560], d: "Longue plage sauvage juste au nord de Matala, zone de ponte des tortues caretta. Baignade du matin. Attention aux courants." },
+    { n: "Agia Triada", t: "site", o: 1, c: [35.0590, 24.7920], d: "Villa minoenne à 3 km de Phaistos, souvent déserte." },
+    { n: "Gortyne", t: "site", c: P.gortyna, x: "1h", d: "Ancienne capitale romaine : odéon, basilique Agios Titos et le Code de Gortyne, plus ancien texte de lois d'Europe gravé dans la pierre." },
+    { n: "Zaros & lac Votomos", t: "village", o: 1, c: [35.1300, 24.9000], d: "Détour de 30 min vers la montagne : lac de source, truite grillée, départ des gorges de Rouvas." }
+  ],
+  sur: [
+    { n: "Tsoutsouros", t: "village", c: P.tsoutsouros, d: "Petit port de pêche au fond d'une baie, ambiance très grecque, peu de touristes étrangers." },
+    { n: "Plage du village", t: "plage", c: [34.9830, 25.2835], d: "Longue plage de sable gris devant les tavernas, eau calme." }
+  ],
+  eat: "Poisson du jour et meze sur le front de mer.",
+  tip: "Journée plus courte : bon moment pour souffler après les grosses étapes."
+},
+{
+  date: "2026-09-23", night: "Makry Gialos", from: "Tsoutsouros", c: P.makrygialos, sea: [35.02, 25.97],
+  car: { o: P.tsoutsouros, d: P.makrygialos, via: [P.viannos, P.sarakina, P.myrtos, P.ierapetra], oL: "Tsoutsouros", dL: "Makry Gialos" },
+  drive: "≈ 105 km · 2h15",
+  route: "Remontée vers Ano Viannos, puis la route du sud-est par Myrtos et Ierapetra, et la côte jusqu'à Makry Gialos.",
+  en: [
+    { n: "Ano Viannos", t: "village", c: P.viannos, d: "Village en balcon, platane géant et vue sur la mer de Libye." },
+    { n: "Arvi", t: "village", o: 1, c: [34.9880, 25.4480], d: "Micro-climat très chaud : bananiers, monastère au pied d'une petite gorge." },
+    { n: "Gorges de Sarakina", t: "rando", c: P.sarakina, x: "1-2h", d: "Petite gorge près de Mythi : on marche (et on nage parfois) dans l'eau entre des parois étroites. Chaussures d'eau." },
+    { n: "Myrtos", t: "village", c: P.myrtos, d: "Village blanc en bord de mer, parfait pour déjeuner et se baigner." },
+    { n: "Ierapetra", t: "village", c: P.ierapetra, d: "Ville la plus au sud d'Europe : forteresse vénitienne de Kales sur le port." },
+    { n: "Île de Chrysi", t: "bateau", o: 1, c: [34.8740, 25.7050], d: "Île aux cèdres et eau turquoise. Bateaux depuis Ierapetra le matin, retour fin d'après-midi : prend toute la journée." }
+  ],
+  sur: [
+    { n: "Plage de Makry Gialos", t: "plage", c: P.makrygialos, d: "Longue plage de sable très peu profonde, eau calme, tavernas les pieds dans le sable." },
+    { n: "Monastère de Kapsa", t: "site", c: [35.0197, 26.0578], d: "Accroché à la falaise à l'entrée d'une gorge, 10 min à l'est. Superbe en fin de journée." }
+  ],
+  eat: "Tavernas de la plage, légumes de la région (Ierapetra = potager de la Crète).",
+  tip: "Faire le plein à Ierapetra : demain routes de montagne peu équipées."
+},
+{
+  date: "2026-09-24", night: "Palekastro", from: "Makry Gialos", c: P.palekastro, sea: [35.20, 26.30],
+  car: { o: P.makrygialos, d: P.palekastro, via: [[35.0197, 26.0578], P.ziros, P.xerokampos, P.zakros], oL: "Makry Gialos", dL: "Palekastro" },
+  drive: "≈ 100 km · 2h30 par l'extrême est",
+  route: "Itinéraire conseillé : Kapsa, Goudouras, plateau de Ziros, Xerokampos, Kato Zakros, Palekastro. Routes de montagne. La portion Xerokampos → Kato Zakros est en partie en piste : en cas de doute, repasser par Ziros (asphalte). Variante courte : Lithines, Sitia, Palekastro (≈ 60 km · 1h10).",
+  en: [
+    { n: "Plateau de Ziros", t: "village", c: P.ziros, d: "Village de montagne, café au kafeneio." },
+    { n: "Xerokampos", t: "plage", c: P.xerokampos, x: "2h", d: "Bout du monde : plusieurs plages de sable blanc quasi désertes. Baignade et pique-nique." },
+    { n: "Palais de Kato Zakros", t: "site", c: P.zakros, d: "4e grand palais minoen, au bord d'une baie paisible avec tavernas. Horaires à vérifier." },
+    { n: "Gorge des Morts", t: "rando", o: 1, c: [35.0990, 26.2450], x: "1h30", d: "Grottes funéraires minoennes dans les parois. On peut n'en faire que la dernière partie depuis Kato Zakros." }
+  ],
+  sur: [
+    { n: "Palekastro", t: "village", c: P.palekastro, d: "Village agricole tranquille, bonne base pour l'extrême est." },
+    { n: "Kouremenos", t: "plage", c: [35.2050, 26.2800], d: "Spot de windsurf et kite grâce au vent régulier, location de matériel." },
+    { n: "Chiona", t: "plage", c: [35.1920, 26.2860], d: "Petite plage avec tavernas de poisson, à côté des fouilles minoennes." }
+  ],
+  eat: "Tavernas de poisson à Chiona au coucher du soleil.",
+  tip: "Vérifier que l'assurance de la location couvre les pistes avant de s'engager vers Zakros."
+},
+{
+  date: "2026-09-25", night: "Mochlos", from: "Palekastro", c: P.mochlos, sea: [35.20, 25.90],
+  car: { o: P.palekastro, d: P.mochlos, via: [P.vai, P.toplou, P.sitia], oL: "Palekastro", dL: "Mochlos" },
+  drive: "≈ 70 km · 1h30 avec le crochet par Vai",
+  route: "Crochet au nord vers Vai, puis Toplou, Sitia et la route côtière nord jusqu'à Mochlos (descente en lacets sur la fin).",
+  en: [
+    { n: "Palmeraie de Vai", t: "plage", c: P.vai, d: "Plus grande palmeraie naturelle d'Europe au bord d'une plage de sable. Arriver avant 10h. Parking payant." },
+    { n: "Itanos", t: "site", o: 1, c: [35.2630, 26.2650], d: "Ruines antiques à 3 km de Vai et petites plages bien plus calmes." },
+    { n: "Monastère de Toplou", t: "site", c: P.toplou, d: "Monastère fortifié du XVe, icônes remarquables. Boutique : huile d'olive et vin du monastère." },
+    { n: "Sitia", t: "village", c: P.sitia, d: "Port et front de mer vivants, déjeuner. Région réputée pour son huile d'olive." },
+    { n: "Gorge de Richtis", t: "rando", o: 1, c: [35.1700, 25.9730], x: "3h AR", d: "Sentier ombragé le long d'un ruisseau jusqu'à une cascade de 20 m, puis une plage. Départ près d'Exo Mouliana." }
+  ],
+  sur: [
+    { n: "Mochlos", t: "village", c: P.mochlos, d: "Minuscule village de pêcheurs face à un îlot aux ruines minoennes. Parfait pour la dernière soirée." },
+    { n: "Îlot de Mochlos", t: "plage", c: [35.1880, 25.9020], d: "À ≈ 150 m du quai. Traverser à la nage seulement par mer calme : courant dans le chenal." }
+  ],
+  eat: "Dernier dîner en terrasse face à l'îlot, au coucher du soleil.",
+  tip: "Préparer la route du lendemain : ≈ 1h45 jusqu'à l'aéroport d'Héraklion."
+}
+];
+
+/* ============ OUTILS ============ */
+var LS = {
+  get: function (k, d) { try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } },
+  set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+};
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+function ll(p) { return p[0] + "," + p[1]; }
+function dObj(s) { return new Date(s + "T12:00:00"); }
+function todayStr() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+function fmtLong(s) { return dObj(s).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }); }
+function fmtShortDay(s) { return dObj(s).toLocaleDateString("fr-FR", { weekday: "short" }).replace(".", ""); }
+function dayNum(s) { return dObj(s).getDate(); }
+function gmapsDir(car) {
+  var u = "https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=" + ll(car.o) + "&destination=" + ll(car.d);
+  if (car.via.length) u += "&waypoints=" + car.via.map(ll).join("%7C");
+  return u;
+}
+function gmapsTo(c) { return "https://www.google.com/maps/dir/?api=1&destination=" + ll(c); }
+
+var WMO = function (c) {
+  if (c === 0) return ["☀️", "Grand soleil"];
+  if (c <= 2) return ["🌤️", "Plutôt ensoleillé"];
+  if (c === 3) return ["☁️", "Couvert"];
+  if (c === 45 || c === 48) return ["🌫️", "Brouillard"];
+  if (c >= 51 && c <= 57) return ["🌦️", "Bruine"];
+  if (c >= 61 && c <= 67) return ["🌧️", "Pluie"];
+  if (c >= 71 && c <= 77) return ["🌨️", "Neige"];
+  if (c >= 80 && c <= 82) return ["🌦️", "Averses"];
+  if (c >= 95) return ["⛈️", "Orages"];
+  return ["🌤️", ""];
+};
+function card8(deg) { return ["N", "NE", "E", "SE", "S", "SO", "O", "NO"][Math.round(deg / 45) % 8]; }
+
+/* ============ ETAT ============ */
+var vu = LS.get("crete-vu", {});
+var notes = LS.get("crete-notes", {});
+var WX = LS.get("crete-wx", null);
+var st = { tab: LS.get("crete-tab", "jour"), i: pickDay() };
+var maps = [];
+
+function pickDay() {
+  var t = todayStr();
+  var i = TRIP.findIndex(function (d) { return d.date === t; });
+  if (i >= 0) return i;
+  if (t > TRIP[TRIP.length - 1].date) return TRIP.length - 1;
+  var saved = LS.get("crete-day", 0);
+  return saved < TRIP.length ? saved : 0;
+}
+
+/* ============ METEO (Open-Meteo, gratuit, sans cle) ============ */
+function loadWx(force) {
+  if (!force && WX && Date.now() - WX.at < 60 * 60 * 1000) return;
+  var lat = TRIP.map(function (d) { return d.c[0]; }).join(",");
+  var lon = TRIP.map(function (d) { return d.c[1]; }).join(",");
+  var slat = TRIP.map(function (d) { return d.sea[0]; }).join(",");
+  var slon = TRIP.map(function (d) { return d.sea[1]; }).join(",");
+  var f = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon +
+    "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,wind_gusts_10m_max,wind_direction_10m_dominant,uv_index_max,sunset" +
+    "&timezone=Europe%2FAthens&forecast_days=16";
+  var m = "https://marine-api.open-meteo.com/v1/marine?latitude=" + slat + "&longitude=" + slon +
+    "&daily=wave_height_max&hourly=sea_surface_temperature&timezone=Europe%2FAthens&forecast_days=16";
+  var j = function (u) { return fetch(u).then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); }); };
+  Promise.allSettled([j(f), j(m)]).then(function (res) {
+    if (res[0].status !== "fulfilled") return;
+    var F = [].concat(res[0].value), M = res[1].status === "fulfilled" ? [].concat(res[1].value) : [];
+    var out = { at: Date.now(), days: {} };
+    TRIP.forEach(function (d, i) {
+      var dl = F[i] && F[i].daily; if (!dl) return;
+      var k = dl.time.indexOf(d.date); if (k < 0) return;
+      var o = {
+        code: dl.weather_code[k], max: dl.temperature_2m_max[k], min: dl.temperature_2m_min[k],
+        rain: dl.precipitation_probability_max[k], wind: dl.wind_speed_10m_max[k], gust: dl.wind_gusts_10m_max[k],
+        dir: dl.wind_direction_10m_dominant[k], uv: dl.uv_index_max[k], sunset: (dl.sunset[k] || "").slice(11)
+      };
+      var mm = M[i];
+      if (mm && mm.daily) { var wk = mm.daily.time.indexOf(d.date); if (wk >= 0) o.wave = mm.daily.wave_height_max[wk]; }
+      if (mm && mm.hourly) { var hk = mm.hourly.time.indexOf(d.date + "T14:00"); if (hk >= 0) o.sst = mm.hourly.sea_surface_temperature[hk]; }
+      out.days[d.date] = o;
+    });
+    WX = out; LS.set("crete-wx", out);
+    if (st.tab === "jour") { var el = document.getElementById("wx"); if (el) el.innerHTML = wxInner(TRIP[st.i]); var al = document.getElementById("wxalert"); if (al) al.innerHTML = windAlert(TRIP[st.i]); }
+    if (st.tab === "meteo") render();
+  });
+}
+function avail(date) {
+  var d = dObj(date); d.setDate(d.getDate() - 15);
+  return d.toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
+}
+function wxInner(d) {
+  var w = WX && WX.days[d.date];
+  if (!w) {
+    return '<div class="wx"><div class="ico">🌤️</div><div><div class="t">≈ 27°<small> / 20°</small></div><div class="lbl">Normale de septembre · mer ≈ 25°</div></div><div class="where">' + esc(d.night) + '</div>' +
+      '<div class="stats" style="grid-template-columns:1fr"><div class="stat">' + (WX ? "Prévision détaillée disponible à partir du " + avail(d.date) + "." : "Chargement de la prévision… (connexion requise)") + '</div></div></div>';
+  }
+  var ic = WMO(w.code);
+  return '<div class="wx"><div class="ico">' + ic[0] + '</div><div><div class="t">' + Math.round(w.max) + '°<small> / ' + Math.round(w.min) + '°</small></div><div class="lbl">' + ic[1] + '</div></div><div class="where">' + esc(d.night) + '</div>' +
+    '<div class="stats">' +
+    '<div class="stat">Pluie<b>' + (w.rain == null ? "-" : w.rain + "%") + '</b></div>' +
+    '<div class="stat">Vent ' + card8(w.dir) + '<b>' + Math.round(w.wind) + ' <small>km/h</small></b></div>' +
+    '<div class="stat">Mer<b>' + (w.sst == null ? "-" : Math.round(w.sst) + "°") + '</b></div>' +
+    '<div class="stat">Coucher<b>' + (w.sunset || "-") + '</b></div>' +
+    '</div>' +
+    '<div class="small muted" style="grid-column:1/-1;margin-top:8px">Rafales ' + Math.round(w.gust) + ' km/h' + (w.wave != null ? ' · vagues ' + w.wave.toFixed(1) + ' m' : '') + ' · UV ' + Math.round(w.uv || 0) + '</div></div>';
+}
+function windAlert(d) {
+  var w = WX && WX.days[d.date];
+  if (!w || !d.ferry || w.gust < 50) return "";
+  return '<div class="alert"><div>💨</div><div><b>Vent fort prévu (rafales ' + Math.round(w.gust) + ' km/h)</b>Risque d\'annulation des ferries de la côte sud. Demander au guichet ANENDYK et garder une marge.</div></div>';
+}
+
+/* ============ VUES ============ */
+var ICON = {
+  jour: '<svg viewBox="0 0 24 24"><path d="M4 19c3-6 5-9 8-9s5 3 8 9"/><circle cx="12" cy="5" r="2"/></svg>',
+  carte: '<svg viewBox="0 0 24 24"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/></svg>',
+  meteo: '<svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="3.5"/><path d="M9 2v1.5M2 9h1.5M4 4l1 1M14 4l-1 1"/><path d="M8 20h9a3.5 3.5 0 0 0 0-7 5 5 0 0 0-9.5 1.5A2.8 2.8 0 0 0 8 20z"/></svg>',
+  infos: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg>'
+};
+var CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+function renderNav() {
+  var tabs = [["jour", "Jour par jour"], ["carte", "Carte"], ["meteo", "Météo"], ["infos", "Pratique"]];
+  document.getElementById("nav").innerHTML = tabs.map(function (t) {
+    return '<button data-tab="' + t[0] + '" class="' + (st.tab === t[0] ? "on" : "") + '">' + ICON[t[0]] + t[1] + '</button>';
+  }).join("");
+}
+
+function rail() {
+  var t = todayStr();
+  return '<div class="rail" id="rail">' + TRIP.map(function (d, i) {
+    return '<button class="chip' + (i === st.i ? " on" : "") + (d.date === t ? " today" : "") + '" data-day="' + i + '"><span>' + fmtShortDay(d.date) + '</span> <b>' + dayNum(d.date) + '</b><small>' + esc(d.night) + '</small></button>';
+  }).join("") + '</div>';
+}
+
+function stopList(list, d, key) {
+  return '<ul class="tl">' + list.map(function (s, k) {
+    var id = d.date + "-" + key + k, tg = TAGS[s.t];
+    return '<li class="stop' + (vu[id] ? " done" : "") + '" style="--c:' + tg.c + '">' +
+      '<button class="dot" data-vu="' + id + '" aria-label="Marquer comme vu">' + CHECK + '</button>' +
+      '<div class="nm">' + esc(s.n) + '</div>' +
+      '<div class="meta" style="margin-top:2px"><span class="tag">' + tg.l + '</span>' + (s.o ? '<span class="opt">Option</span>' : '') + (s.x ? '<span>⏱ ' + esc(s.x) + '</span>' : '') + '</div>' +
+      '<div class="desc">' + esc(s.d) + '</div>' +
+      (s.c ? '<div class="meta"><a href="' + gmapsTo(s.c) + '" target="_blank" rel="noopener">Itinéraire ↗</a></div>' : '') +
+      '</li>';
+  }).join("") + '</ul>';
+}
+
+function viewDay() {
+  var d = TRIP[st.i], t = todayStr(), cd = "";
+  var diff = Math.round((dObj(TRIP[0].date) - dObj(t)) / 86400000);
+  if (diff > 0) cd = '<div class="countdown">✈️ Départ dans ' + diff + ' jour' + (diff > 1 ? "s" : "") + '</div>';
+  else if (d.date === t) cd = '<div class="countdown">📍 Aujourd\'hui</div>';
+
+  var h = rail() +
+    '<header class="hero"><div class="num">' + (st.i + 1) + '</div><div class="sun"></div>' +
+    '<div class="kick">Jour ' + (st.i + 1) + ' · ' + fmtLong(d.date) + '</div>' +
+    '<h1>' + esc(d.night) + '</h1><div class="from">nuit ici · depuis ' + esc(d.from) + '</div>' + cd +
+    '<svg viewBox="0 0 400 46" preserveAspectRatio="none"><path d="M0 22 C60 4 120 40 200 22 S340 6 400 22 V46 H0Z" fill="#F3ECDF" opacity=".35"/><path d="M0 30 C70 16 130 44 210 30 S350 18 400 30 V46 H0Z" fill="#F3ECDF"/></svg>' +
+    '</header>' +
+    '<main class="wrap">' +
+    '<section class="card lift rise" id="wx">' + wxInner(d) + '</section>' +
+    '<div id="wxalert">' + windAlert(d) + '</div>' +
+    (d.alert ? '<div class="alert rise' + (d.alert.blue ? " blue" : "") + '"><div>⛴️</div><div><b>' + esc(d.alert.h) + '</b>' + esc(d.alert.b) + '</div></div>' : '') +
+    '<section class="card rise" style="animation-delay:.05s"><h2>La route <em>' + (d.car ? "en voiture" : "à pied & en bateau") + '</em></h2>' +
+    (d.car ? '<div class="rt"><span>' + esc(d.car.oL) + '</span><i></i><span>' + esc(d.car.dL) + '</span></div>' : '') +
+    '<div class="big">' + esc(d.drive) + '</div><div class="muted">' + esc(d.route) + '</div>' +
+    '<div class="btns">' + (d.car ? '<a class="btn" href="' + gmapsDir(d.car) + '" target="_blank" rel="noopener">🧭 Lancer le GPS</a>' : '') +
+    '<a class="btn ghost" href="' + gmapsTo(d.c) + '" target="_blank" rel="noopener">📍 ' + esc(d.night) + '</a></div>' +
+    '<p class="small muted" style="margin:10px 0 0">Distances et temps approximatifs : sur les routes de montagne, compter +20 % sur le GPS.</p></section>' +
+    '<section class="card rise" style="animation-delay:.1s"><h2>En chemin <em>à cocher une fois vu</em></h2>' + stopList(d.en, d, "e") + '</section>' +
+    '<section class="card rise" style="animation-delay:.15s"><h2>Sur place <em>' + esc(d.night) + '</em></h2>' + stopList(d.sur, d, "s") + '</section>' +
+    '<div class="duo rise" style="animation-delay:.2s"><div class="card mini"><h3>🍽️ Manger</h3><p>' + esc(d.eat) + '</p></div><div class="card mini"><h3>💡 Astuce</h3><p>' + esc(d.tip) + '</p></div></div>' +
+    '<section class="card rise" style="animation-delay:.25s"><h2>Carte de l\'étape</h2><div class="mmap" id="mmap"></div></section>' +
+    '<section class="card"><h2>Nos notes</h2><textarea id="note" placeholder="Réservation, code du logement, resto repéré…">' + esc(notes[d.date] || "") + '</textarea></section>' +
+    '<div class="btns" style="justify-content:space-between;margin:4px 0 20px">' +
+    (st.i > 0 ? '<button class="btn ghost" data-day="' + (st.i - 1) + '">← ' + esc(TRIP[st.i - 1].night) + '</button>' : '<span></span>') +
+    (st.i < TRIP.length - 1 ? '<button class="btn ghost" data-day="' + (st.i + 1) + '">' + esc(TRIP[st.i + 1].night) + ' →</button>' : '') +
+    '</div></main>';
+  return h;
+}
+
+function viewMeteo() {
+  var upd = WX ? new Date(WX.at).toLocaleString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "jamais";
+  return '<div class="ptitle"><h1>Météo</h1><p>Prévision là où vous dormez · mise à jour ' + upd + '</p></div><div class="greek"></div>' +
+    '<main class="wrap"><section class="card rise">' + TRIP.map(function (d, i) {
+      var w = WX && WX.days[d.date], r;
+      if (w) {
+        var ic = WMO(w.code);
+        r = '<div class="r"><b>' + ic[0] + ' ' + Math.round(w.max) + '°</b><div class="s">' + Math.round(w.min) + '° · ' + (w.rain || 0) + '% pluie</div></div>';
+      } else r = '<div class="r s">dispo le<br>' + avail(d.date) + '</div>';
+      var extra = w ? 'Vent ' + card8(w.dir) + ' ' + Math.round(w.wind) + ' km/h · rafales ' + Math.round(w.gust) + (w.sst != null ? ' · mer ' + Math.round(w.sst) + '°' : '') + (w.wave != null ? ' · vagues ' + w.wave.toFixed(1) + ' m' : '') : 'Normale : ≈ 27° / 20°, mer ≈ 25°';
+      var flag = w && d.ferry && w.gust >= 50 ? '<div class="flag">💨 Ferry : risque d\'annulation</div>' : (d.ferry ? '<div class="s">⛴️ jour de ferry</div>' : '');
+      return '<div class="wrow" data-goday="' + i + '"><div class="d">' + dayNum(d.date) + '<span>' + fmtShortDay(d.date) + '</span></div><div><div class="n">' + esc(d.night) + '</div><div class="s">' + extra + '</div>' + flag + '</div>' + r + '</div>';
+    }).join("") + '</section>' +
+    '<div class="btns" style="justify-content:center"><button class="btn ghost" id="refresh">↻ Actualiser</button></div>' +
+    '<p class="small muted" style="text-align:center">Données Open-Meteo. Prévision fiable à 5-7 jours, indicative au-delà.</p></main>';
+}
+
+function viewInfos() {
+  return '<div class="ptitle"><h1>Pratique</h1><p>10 nuits, de Réthymnon à Mochlos</p></div><div class="greek"></div><main class="wrap info">' +
+    '<section class="card rise"><h3>🚨 Urgences</h3><ul><li><b>112</b> : numéro d\'urgence européen (parle anglais)</li><li><b>1571</b> : police touristique</li><li>Pharmacies : croix verte, une de garde par secteur (affichée sur la porte)</li></ul></section>' +
+    '<section class="card rise" style="animation-delay:.05s"><h3>⛴️ Ferries côte sud (18 → 20 sept)</h3><ul><li>Compagnie ANENDYK : <a href="https://anendyk.gr/routes/" target="_blank" rel="noopener">anendyk.gr</a>. Billets au guichet du port.</li><li>Chora Sfakion → Agia Roumeli : 10h30, 13h00, 16h30 (≈ 1h)</li><li>Agia Roumeli → Loutro : 8h45, 11h30, 17h30 (≈ 45 min)</li><li>Loutro → Chora Sfakion : très nombreux départs (≈ 20 min)</li><li>Horaires 2026 annoncés, à reconfirmer sur place. Le vent peut annuler une traversée.</li></ul></section>' +
+    '<section class="card rise" style="animation-delay:.1s"><h3>🥾 Gorges de Samaria</h3><ul><li>Ouvertes du 1er mai au 31 octobre, entrée par le haut de 7h à 13h.</li><li>Billet ≈ 10 €, gratuit -18 ans et +65 ans.</li><li>Depuis Agia Roumeli, on peut remonter jusqu\'aux Portes de Fer sans faire toute la gorge.</li></ul></section>' +
+    '<section class="card rise" style="animation-delay:.15s"><h3>🚗 Conduite</h3><ul><li>Sur la VOAK, les voitures lentes roulent sur la bande d\'arrêt d\'urgence pour laisser doubler : faites pareil.</li><li>Chèvres et pierres sur les routes de montagne, klaxon dans les virages sans visibilité.</li><li>Stations rares dans le sud-ouest et l\'extrême est : faire le plein dès que le réservoir est à moitié.</li><li>Pistes non goudronnées souvent exclues de l\'assurance location.</li><li>Alcool : taux limite bas (0,5 g/l), contrôles fréquents.</li></ul></section>' +
+    '<section class="card rise" style="animation-delay:.2s"><h3>🏖️ Plage & soleil</h3><ul><li>Chaussures d\'eau (galets, oursins), crème, chapeau : peu d\'ombre dans le sud.</li><li>Mi-septembre : ≈ 27° le jour, mer ≈ 25°, coucher du soleil vers 19h20.</li><li>Courants possibles à Kommos et dans le chenal de Mochlos.</li></ul></section>' +
+    '<section class="card rise" style="animation-delay:.25s"><h3>💶 Sur place</h3><ul><li>Liquide indispensable à Agia Roumeli, Loutro et dans les petits villages.</li><li>Raki et dessert souvent offerts en fin de repas.</li><li>Pourboire : arrondir, 5 à 10 % si le service est top.</li><li>Monastères : épaules et genoux couverts.</li></ul></section>' +
+    '<section class="card"><h3>✅ Progression</h3><p class="muted" style="margin:0 0 10px">' + countVu() + '</p><button class="btn ghost" id="resetvu">Tout décocher</button></section>' +
+    '</main>';
+}
+function countVu() {
+  var tot = 0, ok = 0;
+  TRIP.forEach(function (d) { ["e", "s"].forEach(function (k) { (k === "e" ? d.en : d.sur).forEach(function (s, i) { tot++; if (vu[d.date + "-" + k + i]) ok++; }); }); });
+  return ok + " endroit" + (ok > 1 ? "s" : "") + " coché" + (ok > 1 ? "s" : "") + " sur " + tot + ".";
+}
+
+function viewCarte() {
+  return '<div class="fullmap" id="bigmap"></div><div class="maplegend"><b>Le tour de Crète</b><br><span class="muted">Touchez un numéro pour ouvrir le jour · ⛴️ tronçon en bateau</span></div>';
+}
+
+/* ============ CARTES (Leaflet + OpenStreetMap) ============ */
+function clearMaps() { maps.forEach(function (m) { m.remove(); }); maps = []; }
+function tiles(m) {
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18, attribution: "© OpenStreetMap" }).addTo(m);
+}
+function pin(label, cls) {
+  return L.divIcon({ className: "", html: '<div class="pin ' + (cls || "") + '"><span>' + label + '</span></div>', iconSize: [30, 30], iconAnchor: [15, 30], popupAnchor: [0, -28] });
+}
+function initMiniMap() {
+  if (!window.L) return;
+  var el = document.getElementById("mmap"); if (!el) return;
+  var d = TRIP[st.i], prev = st.i > 0 ? TRIP[st.i - 1] : null;
+  var m = L.map(el, { zoomControl: false, attributionControl: false, scrollWheelZoom: false });
+  tiles(m); maps.push(m);
+  var pts = [];
+  var start = prev ? prev.c : P.her;
+  L.marker(start, { icon: pin(prev ? st.i : "✈", "start") }).addTo(m).bindPopup("<b>" + esc(prev ? prev.night : "Aéroport") + "</b><br>départ");
+  pts.push(start);
+  if (d.car) {
+    var line = [d.car.o].concat(d.car.via, [d.car.d]);
+    L.polyline(line, { color: "#C4553A", weight: 3, dashArray: "6 7" }).addTo(m);
+    pts = pts.concat(line);
+  }
+  if (!d.car || d.date === "2026-09-18" || d.date === "2026-09-20") {
+    var sea = d.date === "2026-09-18" ? [P.sfakia, P.loutro, P.roumeli] : d.date === "2026-09-19" ? [P.roumeli, P.loutro] : [P.loutro, P.sfakia];
+    L.polyline(sea, { color: "#1B6A86", weight: 3, dashArray: "2 6" }).addTo(m);
+    pts = pts.concat(sea);
+  }
+  d.en.concat(d.sur).forEach(function (s) {
+    if (!s.c) return;
+    L.circleMarker(s.c, { radius: 6, color: "#fff", weight: 2, fillColor: TAGS[s.t].c, fillOpacity: 1 }).addTo(m)
+      .bindPopup("<b>" + esc(s.n) + "</b><br><a href='" + gmapsTo(s.c) + "' target='_blank' rel='noopener'>Itinéraire ↗</a>");
+    pts.push(s.c);
+  });
+  L.marker(d.c, { icon: pin(st.i + 1, "on") }).addTo(m).bindPopup("<b>" + esc(d.night) + "</b><br>nuit " + (st.i + 1));
+  pts.push(d.c);
+  m.fitBounds(L.latLngBounds(pts), { padding: [24, 24] });
+}
+function initBigMap() {
+  if (!window.L) { document.getElementById("bigmap").innerHTML = '<p style="padding:90px 20px">Carte indisponible hors ligne.</p>'; return; }
+  var m = L.map("bigmap", { zoomControl: false });
+  tiles(m); maps.push(m);
+  L.control.zoom({ position: "bottomright" }).addTo(m);
+  L.marker(P.her, { icon: pin("✈", "start") }).addTo(m).bindPopup("<b>Aéroport d'Héraklion</b>");
+  var legs = [[P.her, P.rethymno], [P.rethymno, P.chania, P.topolia, P.elafonisi], [P.elafonisi, P.topolia, P.vrysses, P.askyfou, P.sfakia],
+    null, null, [P.sfakia, P.frango, P.rodakino], [P.rodakino, P.plakias, P.preveli, P.spili, P.phaistos, P.matala],
+    [P.matala, P.gortyna, P.tsoutsouros], [P.tsoutsouros, P.viannos, P.myrtos, P.ierapetra, P.makrygialos],
+    [P.makrygialos, P.ziros, P.xerokampos, P.zakros, P.palekastro], [P.palekastro, P.vai, P.toplou, P.sitia, P.mochlos]];
+  legs.forEach(function (l) { if (l) L.polyline(l, { color: "#C4553A", weight: 3, opacity: .85, dashArray: "7 7" }).addTo(m); });
+  L.polyline([P.sfakia, P.loutro, P.roumeli], { color: "#1B6A86", weight: 3, dashArray: "2 6" }).addTo(m);
+  TRIP.forEach(function (d, i) {
+    L.marker(d.c, { icon: pin(i + 1, i === st.i ? "on" : "") }).addTo(m)
+      .bindPopup("<b>" + (i + 1) + ". " + esc(d.night) + "</b><br>" + fmtLong(d.date) + "<br><a class='pbtn' href='#' data-goday='" + i + "'>Voir le jour</a>");
+  });
+  m.fitBounds(L.latLngBounds(TRIP.map(function (d) { return d.c; }).concat([P.her])), { padding: [30, 30], paddingTopLeft: [30, 90] });
+}
+
+/* ============ RENDU & EVENEMENTS ============ */
+function render() {
+  clearMaps();
+  var app = document.getElementById("app");
+  if (st.tab === "jour") app.innerHTML = viewDay();
+  else if (st.tab === "meteo") app.innerHTML = viewMeteo();
+  else if (st.tab === "infos") app.innerHTML = viewInfos();
+  else app.innerHTML = viewCarte();
+  renderNav();
+  if (st.tab === "jour") {
+    setTimeout(initMiniMap, 30);
+    var on = document.querySelector(".chip.on");
+    if (on) on.parentNode.scrollLeft = on.offsetLeft - 14;
+  }
+  if (st.tab === "carte") setTimeout(initBigMap, 30);
+}
+function goDay(i) {
+  st.i = i; st.tab = "jour"; LS.set("crete-day", i); LS.set("crete-tab", "jour");
+  render(); window.scrollTo(0, 0);
+}
+
+document.addEventListener("click", function (e) {
+  var t = e.target.closest("[data-day],[data-goday],[data-tab],[data-vu],#refresh,#resetvu");
+  if (!t) return;
+  if (t.dataset.vu) {
+    var id = t.dataset.vu;
+    if (vu[id]) delete vu[id]; else vu[id] = 1;
+    LS.set("crete-vu", vu);
+    t.parentNode.classList.toggle("done", !!vu[id]);
+    return;
+  }
+  if (t.dataset.day != null) { goDay(+t.dataset.day); return; }
+  if (t.dataset.goday != null) { e.preventDefault(); goDay(+t.dataset.goday); return; }
+  if (t.dataset.tab) { st.tab = t.dataset.tab; LS.set("crete-tab", st.tab); render(); window.scrollTo(0, 0); return; }
+  if (t.id === "refresh") { t.textContent = "Chargement…"; loadWx(true); return; }
+  if (t.id === "resetvu" && confirm("Décocher tous les endroits ?")) { vu = {}; LS.set("crete-vu", vu); render(); }
+});
+document.addEventListener("input", function (e) {
+  if (e.target.id === "note") { notes[TRIP[st.i].date] = e.target.value; LS.set("crete-notes", notes); }
+});
+
+render();
+loadWx();
+if ("serviceWorker" in navigator && location.protocol.indexOf("http") === 0) {
+  navigator.serviceWorker.register("service-worker.js").catch(function () {});
+}
+</script>
+</body>
+</html>
